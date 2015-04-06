@@ -24,7 +24,8 @@ var trail : LineRenderer;
 var trial_alpha : float = 0.0;
 
 var splatSfx : AudioClip[];
-var explodeSfx : AudioClip;
+var explodeSfx : AudioClip[];
+var encourageSfx: AudioClip[];
 var splashPrefab : GameObject[];
 var splashFlatPrefab : GameObject[];
 var swingSfx : AudioClip;
@@ -36,11 +37,49 @@ var trailPositions : Vector3[] = new Vector3[10];
 var blockSfx : boolean = false;
 var fenceBlocked : boolean = false;
 var points : int = 0;
+var combos: int = 0;
 var fruitDispenser: FruitDispenser;
 var finishGui: FinishGUI;
+var flashGui: GUITexture;
+var flashSpeed : float = 50f;
+var isFlash : boolean = false;
+var isFlashIn : boolean = false;
+var isFlashOut : boolean = false;
+
 
 function Awake () {
 	cSize = Screen.width * 0.01;
+	// Set the texture so that it is the the size of the screen and covers it.
+    flashGui.enabled = false;
+    flashGui.pixelInset = new Rect(0f, 0f, Screen.width, Screen.height);
+}
+
+function Flash()
+{
+    if (isFlashIn){
+	    flashGui.color = Color.Lerp(flashGui.color, Color.white, 0.15);
+	    // If the screen is almost white...
+	    if(flashGui.color.a >= 0.95f){
+	        isFlashIn = false;
+	        isFlashOut = true;
+	        flashGui.color = Color.white;
+	    }
+    }
+    else if (isFlashOut){
+	    flashGui.color = Color.Lerp(flashGui.color, Color.clear, 0.15);
+	    if(flashGui.color.a <= 0.05f)
+	    {
+	        // ... set the colour to clear and disable the GUITexture.
+	        isFlashOut = false;
+	        isFlash = false;
+	        flashGui.enabled = false;
+	        flashGui.color = Color.clear;
+	    }	
+    }
+    else{ //initialize
+    	isFlashIn = true;
+    }
+    
 }
 
 //explode object
@@ -63,14 +102,19 @@ function BlowObject(hit : RaycastHit) {
 			var ins2 = GameObject.Instantiate(splashFlatPrefab[index],splashZ,Quaternion.identity);		
 			
 			audio.PlayOneShot(splatSfx[Random.Range(0,splatSfx.length)],1.0);
+			combos ++;
+			if (combos%6 == 0) audio.PlayOneShot(encourageSfx[Random.Range(0,encourageSfx.length)],1.0);
 			points += 2; 
 			//decrease bomb frequency and size
 			//fruitDispenser.downBombPro();
 		}
 		//if bomb
 		else {
-			audio.PlayOneShot(explodeSfx,1.0);
+			isFlash = true;
+			flashGui.enabled = true;
+			audio.PlayOneShot(explodeSfx[Random.Range(0,explodeSfx.length)],1.0);
 			points -= 5;
+			combos = 0;
 			//increase bomb frequency and size
 			//fruitDispenser.upBombPro();
 		}
@@ -216,7 +260,10 @@ function Update () {
 	trail.SetColors(c1,c2);		
 	if (trial_alpha>0) 
 		trial_alpha -= Time.deltaTime;
-
+		
+	if (isFlash){
+		Flash();
+	}
 }
 
 
