@@ -23,7 +23,7 @@ function Awake() {
 	s1 = GameObject.Find("Snow/s1").GetComponent(ParticleSystem);
 	s2 = GameObject.Find("Snow/s2").GetComponent(ParticleSystem);
 	s3 = GameObject.Find("Snow/s3").GetComponent(ParticleSystem);
-	fence = GameObject.Find("Fence");
+	//fence = GameObject.Find("Fence");
 }
 
 function Start () {
@@ -59,6 +59,6 @@ function setEnvironment(rr:float){
 }
 
 function OnGUI() {
-	fence.transform.position.y = wallPos;
+	//fence.transform.position.y = wallPos;
 	s1.emissionRate = s2.emissionRate = s3.emissionRate = snowEmissionRate;
 }

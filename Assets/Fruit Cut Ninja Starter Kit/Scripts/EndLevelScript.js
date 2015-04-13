@@ -8,7 +8,7 @@ var guiPoints : GUIText;
 var mouseControl : MouseControl;
 
 function Awake () {
-	guiPoints = GameObject.Find("GUI/Right/Points").GetComponent(GUIText);	
+	guiPoints = GameObject.Find("GUI/Points").GetComponent(GUIText);	
 	mouseControl = GetComponent(MouseControl);
 }
 

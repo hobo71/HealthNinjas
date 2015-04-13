@@ -16,7 +16,7 @@ var pause : boolean = false;
 var guiTimer : GUIText;
 
 function Awake(){
-	guiTimer = GameObject.Find("GUI/Right/Timer").GetComponent(GUIText);
+	guiTimer = GameObject.Find("GUI/Box/Timer").GetComponent(GUIText);
 }
 
 function PauseTimer(bool : boolean){

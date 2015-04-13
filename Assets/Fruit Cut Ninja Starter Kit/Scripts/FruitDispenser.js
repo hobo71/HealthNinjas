@@ -4,6 +4,7 @@
 var mouseControl : MouseControl;
 var fruits : GameObject[];
 var bombs : GameObject[];
+var bonus : GameObject[];
 
 var z : float;
 var sfx : AudioClip;
@@ -171,8 +172,12 @@ function Spawn(isbomb : boolean) {
 	var z : float = Random.Range(1,2);
 	var ins : GameObject;
 	
-	if (!isbomb) 
-		ins = GameObject.Instantiate(fruits[Random.Range(0,fruits.length)],transform.position + Vector3(x,0,z),Random.rotation);
+	if (!isbomb) {
+		if (mouseControl.combos>0 && mouseControl.combos%6==0) //random bonus
+			ins = GameObject.Instantiate(bonus[Random.Range(0,bonus.length)],transform.position + Vector3(x,0,z),Random.rotation);
+		else 
+			ins = GameObject.Instantiate(fruits[Random.Range(0,fruits.length)],transform.position + Vector3(x,0,z),Random.rotation);
+	}
 	else{
 		//x = Random.Range(-3.0,3.5);
 		ins = GameObject.Instantiate(bombs[Random.Range(0,bombs.length)],transform.position + Vector3(x,0,z),Random.rotation);

@@ -41,7 +41,7 @@ var combos: int = 0;
 var fruitDispenser: FruitDispenser;
 var finishGui: FinishGUI;
 var flashGui: GUITexture;
-var flashSpeed : float = 50f;
+var flashSpeed : float = 1.5f;
 var isFlash : boolean = false;
 var isFlashIn : boolean = false;
 var isFlashOut : boolean = false;
@@ -52,12 +52,13 @@ function Awake () {
 	// Set the texture so that it is the the size of the screen and covers it.
     flashGui.enabled = false;
     flashGui.pixelInset = new Rect(0f, 0f, Screen.width, Screen.height);
+    combos = 0;
 }
 
 function Flash()
 {
     if (isFlashIn){
-	    flashGui.color = Color.Lerp(flashGui.color, Color.white, 0.15);
+	    flashGui.color = Color.Lerp(flashGui.color, Color.white, 0.07/* 0-1: the smaller the smoother*/); 
 	    // If the screen is almost white...
 	    if(flashGui.color.a >= 0.95f){
 	        isFlashIn = false;
@@ -66,7 +67,7 @@ function Flash()
 	    }
     }
     else if (isFlashOut){
-	    flashGui.color = Color.Lerp(flashGui.color, Color.clear, 0.15);
+	    flashGui.color = Color.Lerp(flashGui.color, Color.clear, 0.12);
 	    if(flashGui.color.a <= 0.05f)
 	    {
 	        // ... set the colour to clear and disable the GUITexture.
@@ -103,8 +104,9 @@ function BlowObject(hit : RaycastHit) {
 			
 			audio.PlayOneShot(splatSfx[Random.Range(0,splatSfx.length)],1.0);
 			combos ++;
-			if (combos%6 == 0) audio.PlayOneShot(encourageSfx[Random.Range(0,encourageSfx.length)],1.0);
+			if (combos%5 == 0) audio.PlayOneShot(encourageSfx[Random.Range(0,encourageSfx.length)],1.0);
 			points += 2; 
+			if (combos%6 == 0) points += 3;
 			//decrease bomb frequency and size
 			//fruitDispenser.downBombPro();
 		}
