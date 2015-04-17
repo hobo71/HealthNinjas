@@ -56,19 +56,19 @@ function Awake () {
 }
 
 function Flash()
-{
-    if (isFlashIn){
-	    flashGui.color = Color.Lerp(flashGui.color, Color.white, 0.07/* 0-1: the smaller the smoother*/); 
-	    // If the screen is almost white...
-	    if(flashGui.color.a >= 0.95f){
+{	
+	if (isFlashIn){
+	    flashGui.color = Color.Lerp(flashGui.color, Color.black, 0.05/* 0-1: the smaller the smoother*/); 
+	    // If the screen is almost black...
+	    if(flashGui.color.a >= 0.98f){
 	        isFlashIn = false;
 	        isFlashOut = true;
-	        flashGui.color = Color.white;
+	        flashGui.color = Color.black;
 	    }
     }
     else if (isFlashOut){
-	    flashGui.color = Color.Lerp(flashGui.color, Color.clear, 0.12);
-	    if(flashGui.color.a <= 0.05f)
+	    flashGui.color = Color.Lerp(flashGui.color, Color.clear, 0.02);
+	    if(flashGui.color.a <= 0.02f)
 	    {
 	        // ... set the colour to clear and disable the GUITexture.
 	        isFlashOut = false;
@@ -112,6 +112,12 @@ function BlowObject(hit : RaycastHit) {
 		}
 		//if bomb
 		else {
+			if (isFlash){
+				//if another flash triggered when the current flash has not done yet..
+				//cancel the current flash-in or flash-out
+				isFlashIn = false;
+				isFlashOut = false;
+			}
 			isFlash = true;
 			flashGui.enabled = true;
 			audio.PlayOneShot(explodeSfx[Random.Range(0,explodeSfx.length)],1.0);
@@ -255,7 +261,13 @@ function Update () {
 		fire_up = true;
 	
 	fire_prev = fire;
-	Control();
+	
+	if (isFlash){
+		Flash();
+	}
+	//if the screen can be seen
+	if (!isFlash || isFlashOut && flashGui.color.a<=0.4f)
+		Control();
 				
 	var c1 = Color(1,1,0,trial_alpha);
 	var c2 = Color(1,0,0,trial_alpha);
@@ -263,9 +275,7 @@ function Update () {
 	if (trial_alpha>0) 
 		trial_alpha -= Time.deltaTime;
 		
-	if (isFlash){
-		Flash();
-	}
+	
 }
 
 

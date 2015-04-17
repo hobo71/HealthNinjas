@@ -171,20 +171,26 @@ function Spawn(isbomb : boolean) {
 	var x : float = Random.Range(-3.0,3.5);
 	var z : float = Random.Range(1,2);
 	var ins : GameObject;
+	var power : float;
 	
 	if (!isbomb) {
-		if (mouseControl.combos>0 && mouseControl.combos%6==0) //random bonus
+		if (mouseControl.combos>0 && mouseControl.combos%2==0){ //bonus star
 			ins = GameObject.Instantiate(bonus[Random.Range(0,bonus.length)],transform.position + Vector3(x,0,z),Random.rotation);
-		else 
+			power = Random.Range(1.8,2.0) * -Physics.gravity.y * 2 * powerMod;
+			x = Random.Range(-4.0,4);
+			mouseControl.combos = 0;
+		}else{ 
 			ins = GameObject.Instantiate(fruits[Random.Range(0,fruits.length)],transform.position + Vector3(x,0,z),Random.rotation);
+			power = Random.Range(1.5,1.8) * -Physics.gravity.y * 1.5 * powerMod;
+		}
 	}
 	else{
 		//x = Random.Range(-3.0,3.5);
 		ins = GameObject.Instantiate(bombs[Random.Range(0,bombs.length)],transform.position + Vector3(x,0,z),Random.rotation);
 		ins.transform.localScale = bombSize;
+		power = Random.Range(1.5,1.8) * -Physics.gravity.y * 1.5 * powerMod;
 	}
-
-	var power = Random.Range(1.5,1.8) * -Physics.gravity.y * 1.5 * powerMod;
+ 
 	var direction = Vector3(-x * 0.05 * Random.Range(0.3,0.8),1,0);
 	direction.z = 0.0;
 	ins.rigidbody.velocity =  direction * power;
