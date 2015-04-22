@@ -53,6 +53,7 @@ function Awake () {
     flashGui.enabled = false;
     flashGui.pixelInset = new Rect(0f, 0f, Screen.width, Screen.height);
     combos = 0;
+    points = 0;
 }
 
 function Flash()
@@ -105,8 +106,8 @@ function BlowObject(hit : RaycastHit) {
 			audio.PlayOneShot(splatSfx[Random.Range(0,splatSfx.length)],1.0);
 			combos ++;
 			if (combos%5 == 0) audio.PlayOneShot(encourageSfx[Random.Range(0,encourageSfx.length)],1.0);
-			points += 2; 
-			if (combos%6 == 0) points += 3;
+			points += 5; 
+			if (hit.collider.gameObject.tag == "bonus") points += 5;
 			//decrease bomb frequency and size
 			//fruitDispenser.downBombPro();
 		}
@@ -121,7 +122,7 @@ function BlowObject(hit : RaycastHit) {
 			isFlash = true;
 			flashGui.enabled = true;
 			audio.PlayOneShot(explodeSfx[Random.Range(0,explodeSfx.length)],1.0);
-			points -= 5;
+			points -= 10;
 			combos = 0;
 			//increase bomb frequency and size
 			//fruitDispenser.upBombPro();

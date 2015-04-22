@@ -168,20 +168,25 @@ function FireUp () {
 
 function Spawn(isbomb : boolean) {
 	
-	var x : float = Random.Range(-3.0,3.5);
+	var x : float = Random.Range(-4.0,4);
 	var z : float = Random.Range(1,2);
 	var ins : GameObject;
 	var power : float;
+	var direction : Vector3;
 	
 	if (!isbomb) {
-		if (mouseControl.combos>0 && mouseControl.combos%2==0){ //bonus star
-			ins = GameObject.Instantiate(bonus[Random.Range(0,bonus.length)],transform.position + Vector3(x,0,z),Random.rotation);
+		if (mouseControl.combos>0 && mouseControl.combos%3==0){ //bonus star
+			var y = Random.Range(0,3);
+			var xs = [-8,8];
+			x = xs[Random.Range(0,xs.length)];
+			ins = GameObject.Instantiate(bonus[Random.Range(0,bonus.length)],transform.position + Vector3(x,y,z),Random.rotation);
+			direction = Vector3(-x * 0.2 * Random.Range(0.3,0.5),0.5,0);
 			power = Random.Range(1.8,2.0) * -Physics.gravity.y * 2 * powerMod;
-			x = Random.Range(-4.0,4);
 			mouseControl.combos = 0;
 		}else{ 
 			ins = GameObject.Instantiate(fruits[Random.Range(0,fruits.length)],transform.position + Vector3(x,0,z),Random.rotation);
 			power = Random.Range(1.5,1.8) * -Physics.gravity.y * 1.5 * powerMod;
+			direction = Vector3(-x * 0.05 * Random.Range(0.3,0.8),1,0);
 		}
 	}
 	else{
@@ -189,9 +194,9 @@ function Spawn(isbomb : boolean) {
 		ins = GameObject.Instantiate(bombs[Random.Range(0,bombs.length)],transform.position + Vector3(x,0,z),Random.rotation);
 		ins.transform.localScale = bombSize;
 		power = Random.Range(1.5,1.8) * -Physics.gravity.y * 1.5 * powerMod;
+		direction = Vector3(-x * 0.05 * Random.Range(0.3,0.8),1,0);
 	}
- 
-	var direction = Vector3(-x * 0.05 * Random.Range(0.3,0.8),1,0);
+	
 	direction.z = 0.0;
 	ins.rigidbody.velocity =  direction * power;
 	audio.PlayOneShot(sfx,1.0);
