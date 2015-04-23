@@ -40,10 +40,6 @@ function PauseRB() {
 	}	
 }
 
-function UnPause() {
-
-}
-
 function ExitGame() {
 	Application.Quit();
 }

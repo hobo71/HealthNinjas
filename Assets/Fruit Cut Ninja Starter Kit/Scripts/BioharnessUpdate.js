@@ -48,7 +48,7 @@ function Update () {
 }
 
 function OnGUI() {
-	if (GUI.Button(HelpClass.ScrRectCenter2(0.1,0.125,0.08,0.065),buttonStr)){
+	if (GUI.Button(HelpClass.ScrRectCenter2(0.510,0.965,0.14,0.065),buttonStr)){
 		if (!isConnected){ //connect
 			//strLog = "connecting..";
 			buttonStr = "connecting..";

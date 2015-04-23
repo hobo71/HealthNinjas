@@ -59,7 +59,7 @@ function Awake () {
 function Flash()
 {	
 	if (isFlashIn){
-	    flashGui.color = Color.Lerp(flashGui.color, Color.black, 0.05/* 0-1: the smaller the smoother*/); 
+	    flashGui.color = Color.Lerp(flashGui.color, Color.black, 0.05/* 0-1: the smaller the longer it takes*/); 
 	    // If the screen is almost black...
 	    if(flashGui.color.a >= 0.98f){
 	        isFlashIn = false;
@@ -68,7 +68,7 @@ function Flash()
 	    }
     }
     else if (isFlashOut){
-	    flashGui.color = Color.Lerp(flashGui.color, Color.clear, 0.02);
+	    flashGui.color = Color.Lerp(flashGui.color, Color.clear, 0.04);
 	    if(flashGui.color.a <= 0.02f)
 	    {
 	        // ... set the colour to clear and disable the GUITexture.
