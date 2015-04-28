@@ -59,7 +59,7 @@ function Awake () {
 function Flash()
 {	
 	if (isFlashIn){
-	    flashGui.color = Color.Lerp(flashGui.color, Color.black, 0.05/* 0-1: the smaller the longer it takes*/); 
+	    flashGui.color = Color.Lerp(flashGui.color, Color.black, 0.04/* 0-1: the smaller the longer it takes*/); 
 	    // If the screen is almost black...
 	    if(flashGui.color.a >= 0.98f){
 	        isFlashIn = false;
@@ -68,7 +68,7 @@ function Flash()
 	    }
     }
     else if (isFlashOut){
-	    flashGui.color = Color.Lerp(flashGui.color, Color.clear, 0.04);
+	    flashGui.color = Color.Lerp(flashGui.color, Color.clear, 0.03);
 	    if(flashGui.color.a <= 0.02f)
 	    {
 	        // ... set the colour to clear and disable the GUITexture.
@@ -89,25 +89,36 @@ function BlowObject(hit : RaycastHit) {
 	if (hit.collider.gameObject.tag != "destroyed") {	
 		//Debug.Log(hit.transform.gameObject.layer);		
 		var splashZ = hit.point;
-		hit.collider.gameObject.GetComponent(CreateOnDestroy).Kill();
-     	Destroy(hit.collider.gameObject);
-			
+		if (hit.collider.gameObject.GetComponent(CreateOnDestroy)!=null){
+			hit.collider.gameObject.GetComponent(CreateOnDestroy).Kill();
+			Destroy(hit.collider.gameObject);
+		}
+		else{
+			hit.collider.gameObject.transform.parent.gameObject.GetComponent(CreateOnDestroy).Kill();
+     		Destroy(hit.collider.gameObject.transform.parent.gameObject);
+		}
 		//if not bomb inc points
 		if (hit.collider.gameObject.tag !="bomb") {
-			var index = 0;
-			if (hit.collider.tag=="red") index = 0;
-			if (hit.collider.tag=="yellow") index = 1;
-			if (hit.collider.tag=="green") index = 2;	
-			splashZ.z = 4; //front
-			var ins = GameObject.Instantiate(splashPrefab[index],splashZ,Quaternion.identity);				
-			splashZ.z = 10;	//back
-			var ins2 = GameObject.Instantiate(splashFlatPrefab[index],splashZ,Quaternion.identity);		
-			
-			audio.PlayOneShot(splatSfx[Random.Range(0,splatSfx.length)],1.0);
-			combos ++;
-			if (combos%5 == 0) audio.PlayOneShot(encourageSfx[Random.Range(0,encourageSfx.length)],1.0);
-			points += 5; 
-			if (hit.collider.gameObject.tag == "bonus") points += 5;
+			if (hit.collider.gameObject.tag=="bonus"){ // bonus
+					points += 15;
+					combos = 0;
+					fruitDispenser.bonusOn = true;
+			}
+			else{
+				var index = 0;
+				if (hit.collider.tag=="red" || hit.collider.tag=="red-bonus") index = 0;
+				if (hit.collider.tag=="yellow" || hit.collider.tag=="yellow-bonus") index = 1;
+				if (hit.collider.tag=="green" || hit.collider.tag=="green-bonus") index = 2;	
+				splashZ.z = 4; //front
+				var ins = GameObject.Instantiate(splashPrefab[index],splashZ,Quaternion.identity);				
+				splashZ.z = 10;	//back
+				var ins2 = GameObject.Instantiate(splashFlatPrefab[index],splashZ,Quaternion.identity);		
+				audio.PlayOneShot(splatSfx[Random.Range(0,splatSfx.length)],1.0);
+				points += 5; 
+				if (hit.collider.tag=="red-bonus" || hit.collider.tag=="yellow-bonus" || hit.collider.tag=="green-bonus");
+				else combos ++;
+				if (combos%6 == 0) audio.PlayOneShot(encourageSfx[Random.Range(0,encourageSfx.length)],1.0);
+			}
 			//decrease bomb frequency and size
 			//fruitDispenser.downBombPro();
 		}
