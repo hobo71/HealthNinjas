@@ -93,7 +93,7 @@ function BlowObject(hit : RaycastHit) {
 			hit.collider.gameObject.GetComponent(CreateOnDestroy).Kill();
 			Destroy(hit.collider.gameObject);
 		}
-		else{
+		else{ //for those game objects with collider parts on children
 			hit.collider.gameObject.transform.parent.gameObject.GetComponent(CreateOnDestroy).Kill();
      		Destroy(hit.collider.gameObject.transform.parent.gameObject);
 		}
@@ -111,7 +111,7 @@ function BlowObject(hit : RaycastHit) {
 				if (hit.collider.tag=="green" || hit.collider.tag=="green-bonus") index = 2;	
 				splashZ.z = 4; //front
 				var ins = GameObject.Instantiate(splashPrefab[index],splashZ,Quaternion.identity);				
-				splashZ.z = 10;	//back
+				splashZ.z = 9;	//back
 				var ins2 = GameObject.Instantiate(splashFlatPrefab[index],splashZ,Quaternion.identity);		
 				audio.PlayOneShot(splatSfx[Random.Range(0,splatSfx.length)],1.0);
 				points += 5; 

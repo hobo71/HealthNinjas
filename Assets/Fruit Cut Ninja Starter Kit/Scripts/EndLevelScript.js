@@ -8,12 +8,12 @@ var guiPoints : GUIText;
 var mouseControl : MouseControl;
 
 function Awake () {
-	guiPoints = GameObject.Find("GUI/Points").GetComponent(GUIText);	
+	guiPoints = GameObject.Find("GUI/Box/Points").GetComponent(GUIText);	
 	mouseControl = GetComponent(MouseControl);
 }
 
 function LateUpdate () {
-	guiPoints.text = "Points: "+mouseControl.points.ToString();
+	guiPoints.text = mouseControl.points.ToString();
 		
 	if (done && !completed) {
 		GameObject.Find("FruitDispenser").GetComponent(FruitDispenser).pause = true;

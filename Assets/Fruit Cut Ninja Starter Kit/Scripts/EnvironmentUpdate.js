@@ -10,14 +10,14 @@ private static var targetRR : float = SharedSettings.targetRR;
 private static var transitRR : float = SharedSettings.transitRR;
 
 //environment
-private static var originalEmissionRate : float = 125;
-private static var finalEmissionRate : float = 0;
-private static var originalWallPos : float = -0.3;
-private static var finalWallPos : float = -5.6;
-private static var snowEmissionRate : float = finalEmissionRate;
-private static var wallPos : float = finalWallPos;
-private static var k : float = (originalWallPos-finalWallPos)/(transitRR-targetRR);
-private static var b : float = originalWallPos - k*transitRR;
+private static var maxEmissionRate : float = 125;
+private static var minEmissionRate : float = 0;
+private static var maxWallPos : float = 8;
+private static var minWallPos : float = 2.5;
+private static var snowEmissionRate : float = minEmissionRate;
+private static var wallPos : float = minWallPos;
+private static var k : float = (maxWallPos-minWallPos)/(transitRR-targetRR);
+private static var b : float = maxWallPos - k*transitRR;
 
 function Awake() {
 	s1 = GameObject.Find("Snow/s1").GetComponent(ParticleSystem);
@@ -33,28 +33,28 @@ function Update () {
 }
 
 function initEnv () {
-	snowEmissionRate = finalEmissionRate;
-	wallPos = finalWallPos;
+	snowEmissionRate = minEmissionRate;
+	wallPos = minWallPos;
 }
 
 //bioharness rr set bomb property
 function setEnvironment(rr:float){
 	if (rr >= highRR){ //too high
-		snowEmissionRate = originalEmissionRate;
-		wallPos = originalWallPos;
+		snowEmissionRate = maxEmissionRate;
+		wallPos = maxWallPos;
 	}
 	else if (rr >= transitRR && rr < highRR){ //change mist alpha
 		var kk = (rr-transitRR)/(highRR-transitRR);
-		snowEmissionRate = originalEmissionRate * kk;
-		wallPos = originalWallPos;
+		snowEmissionRate = maxEmissionRate * kk;
+		wallPos = maxWallPos;
 	}
 	else if (rr < transitRR && rr >= targetRR){ //change wall height
 		wallPos = k*rr + b;
-		snowEmissionRate = finalEmissionRate;
+		snowEmissionRate = minEmissionRate;
 	} 
 	else { //good
-		snowEmissionRate = finalEmissionRate;
-		wallPos = finalWallPos;
+		snowEmissionRate = minEmissionRate;
+		wallPos = minWallPos;
 	}
 }
 

@@ -76,5 +76,5 @@ function Update () {
    	var fraction : int = (showTime * 100) % 100;
 
    	curStrTime = String.Format ("{0:00}:{1:00}:{2:00}", minutes, seconds, fraction); 
-	guiTimer.text = "Time : "+curStrTime;    
+	guiTimer.text = curStrTime;    
 }

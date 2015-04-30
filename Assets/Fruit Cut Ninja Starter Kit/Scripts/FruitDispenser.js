@@ -193,6 +193,7 @@ function Spawn(type : int) {
 		ins = GameObject.Instantiate(fruits[Random.Range(0,fruits.length)],transform.position + Vector3(x,0,z),Random.rotation);
 	}
 	else if (type==2){ //bomb: 2
+		z = Random.Range(0,0.3);
 		ins = GameObject.Instantiate(bombs[Random.Range(0,bombs.length)],transform.position + Vector3(x,0,z),Random.rotation);
 		//ins.transform.localScale = bombSize;
 	}
@@ -205,7 +206,7 @@ function Spawn(type : int) {
 	if (type==3){ //super fruit
 		var y = Random.Range(0,3);
 		var xs = [-8,8];
-		x = xs[Random.Range(0,xs.length)];
+		x = xs[Random.Range(0,2)];
 		ins = GameObject.Instantiate(bonus[Random.Range(0,bonus.length)],transform.position + Vector3(x,y,z),Random.rotation);
 		power = Random.Range(1.8,2.0) * -Physics.gravity.y * 2 * powerMod;
 		direction = Vector3(-x * 0.2 * Random.Range(0.3,0.5),0.5,0);
@@ -228,7 +229,9 @@ function OnTriggerEnter (other : Collider) {
 	if (other.gameObject.tag =="red" || other.gameObject.tag =="yellow" 
 		|| other.gameObject.tag =="green") {
 		var points = mouseControl.points;
-		points --;
+		var combos = mouseControl.combos;
+		combos = 0;
+		points -= 2;
 		mouseControl.points = points>=0 ? points: 0;
 	}	
     Destroy(other.gameObject);
