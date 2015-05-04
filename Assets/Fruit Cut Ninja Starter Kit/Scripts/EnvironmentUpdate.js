@@ -12,8 +12,8 @@ private static var transitRR : float = SharedSettings.transitRR;
 //environment
 private static var maxEmissionRate : float = 125;
 private static var minEmissionRate : float = 0;
-private static var maxWallPos : float = 8;
-private static var minWallPos : float = 2.5;
+private static var maxWallPos : float = 5.6;
+private static var minWallPos : float = 0;
 private static var snowEmissionRate : float = minEmissionRate;
 private static var wallPos : float = minWallPos;
 private static var k : float = (maxWallPos-minWallPos)/(transitRR-targetRR);

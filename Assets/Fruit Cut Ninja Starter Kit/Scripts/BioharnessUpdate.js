@@ -18,7 +18,7 @@ private var rrText: GUIText;
 function Awake() {
 	var jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 	curActivity = jc.GetStatic.<AndroidJavaObject>("currentActivity");
-	rrText = GameObject.Find("GUI/RR").GetComponent(GUIText);
+	//rrText = GameObject.Find("GUI/RR").GetComponent(GUIText);
 }
 
 function SetLog(str: String) {
@@ -67,6 +67,7 @@ function OnGUI() {
 		}
 	}
 	
+	/*
 	rrText.text = repirationRate;
 	//respiration bar
 	if (repirationRate == "N/A");
@@ -89,4 +90,5 @@ function OnGUI() {
 			rrText.color = Color.red;
 		}
 	}
+	*/
 }

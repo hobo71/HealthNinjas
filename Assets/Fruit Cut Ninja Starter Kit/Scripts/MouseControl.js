@@ -111,8 +111,8 @@ function BlowObject(hit : RaycastHit) {
 				if (hit.collider.tag=="green" || hit.collider.tag=="green-bonus") index = 2;	
 				splashZ.z = 4; //front
 				var ins = GameObject.Instantiate(splashPrefab[index],splashZ,Quaternion.identity);				
-				splashZ.z = 9;	//back
-				var ins2 = GameObject.Instantiate(splashFlatPrefab[index],splashZ,Quaternion.identity);		
+				//splashZ.z = 9;	//back
+				//var ins2 = GameObject.Instantiate(splashFlatPrefab[index],splashZ,Quaternion.identity);		
 				audio.PlayOneShot(splatSfx[Random.Range(0,splatSfx.length)],1.0);
 				points += 5; 
 				if (hit.collider.tag=="red-bonus" || hit.collider.tag=="yellow-bonus" || hit.collider.tag=="green-bonus");

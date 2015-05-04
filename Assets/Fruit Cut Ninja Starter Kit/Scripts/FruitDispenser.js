@@ -210,7 +210,7 @@ function Spawn(type : int) {
 		ins = GameObject.Instantiate(bonus[Random.Range(0,bonus.length)],transform.position + Vector3(x,y,z),Random.rotation);
 		power = Random.Range(1.8,2.0) * -Physics.gravity.y * 2 * powerMod;
 		direction = Vector3(-x * 0.2 * Random.Range(0.3,0.5),0.5,0);
-		ins.rigidbody.AddTorque(Random.onUnitSphere * 2,ForceMode.Impulse);
+		ins.rigidbody.AddTorque(Random.onUnitSphere * 0.3,ForceMode.Impulse);
 	}
 	else{ //other common objects
 		power = Random.Range(1.5,1.8) * -Physics.gravity.y * 1.5 * powerMod;
