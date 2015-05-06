@@ -6,11 +6,8 @@ var killed : boolean = false;
 var prefab : GameObject[];
 
 function Kill () {
-
 	if (killed) return;
-
 	killed = true;
-
 	for (var p in prefab) {
 		var ins = GameObject.Instantiate(p,transform.position,Random.rotation);
 		if (ins.rigidbody) {
@@ -19,6 +16,4 @@ function Kill () {
 			ins.rigidbody.AddTorque(Random.onUnitSphere * 1,ForceMode.Impulse);
 		}
 	}
-
 }
-

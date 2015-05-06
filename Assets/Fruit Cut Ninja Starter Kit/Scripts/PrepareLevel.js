@@ -25,7 +25,6 @@ function PrepareRoutine()
 }
 
 function Start () {
-
 	//GameObject.Find("GUI/LevelName").GetComponent(GUIText).text = SharedSettings.LevelName[SharedSettings.LoadLevel-1]; 
 	PrepareRoutine();
 }

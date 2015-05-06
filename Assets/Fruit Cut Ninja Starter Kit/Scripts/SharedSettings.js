@@ -15,3 +15,8 @@ static var LoadLevel : int = 3;
 static var highRR : float = 24.0f;
 static var transitRR : float = 14.0f;
 static var targetRR : float = 10.0f;
+
+//score
+static var bonus : int = 30;
+static var fruit : int = 5;
+static var junk : int = 10;

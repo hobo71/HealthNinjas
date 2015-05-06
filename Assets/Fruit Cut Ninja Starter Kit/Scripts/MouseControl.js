@@ -46,6 +46,7 @@ var isFlash : boolean = false;
 var isFlashIn : boolean = false;
 var isFlashOut : boolean = false;
 
+var scoreEffect : GameObject;
 
 function Awake () {
 	cSize = Screen.width * 0.01;
@@ -89,18 +90,23 @@ function BlowObject(hit : RaycastHit) {
 	if (hit.collider.gameObject.tag != "destroyed") {	
 		//Debug.Log(hit.transform.gameObject.layer);		
 		var splashZ = hit.point;
+		var go : GameObject;
 		if (hit.collider.gameObject.GetComponent(CreateOnDestroy)!=null){
-			hit.collider.gameObject.GetComponent(CreateOnDestroy).Kill();
-			Destroy(hit.collider.gameObject);
+			go = hit.collider.gameObject;
 		}
 		else{ //for those game objects with collider parts on children
-			hit.collider.gameObject.transform.parent.gameObject.GetComponent(CreateOnDestroy).Kill();
-     		Destroy(hit.collider.gameObject.transform.parent.gameObject);
+			go = hit.collider.gameObject.transform.parent.gameObject;
 		}
+		go.GetComponent(CreateOnDestroy).Kill();
+		//score effect
+		var so = GameObject.Instantiate(scoreEffect, go.transform.position, Quaternion.identity);				
+		var PointScript = so.GetComponent(ScoreEffect);
 		//if not bomb inc points
 		if (hit.collider.gameObject.tag !="bomb") {
 			if (hit.collider.gameObject.tag=="bonus"){ // bonus
-					points += 15;
+					points += SharedSettings.bonus;
+					PointScript.Point = SharedSettings.bonus;
+					PointScript.type = "bonus";
 					combos = 0;
 					fruitDispenser.bonusOn = true;
 			}
@@ -114,7 +120,9 @@ function BlowObject(hit : RaycastHit) {
 				//splashZ.z = 9;	//back
 				//var ins2 = GameObject.Instantiate(splashFlatPrefab[index],splashZ,Quaternion.identity);		
 				audio.PlayOneShot(splatSfx[Random.Range(0,splatSfx.length)],1.0);
-				points += 5; 
+				points += SharedSettings.fruit; 
+				PointScript.Point = SharedSettings.fruit;
+				PointScript.type = "fruit";
 				if (hit.collider.tag=="red-bonus" || hit.collider.tag=="yellow-bonus" || hit.collider.tag=="green-bonus");
 				else combos ++;
 				if (combos%6 == 0) audio.PlayOneShot(encourageSfx[Random.Range(0,encourageSfx.length)],1.0);
@@ -133,13 +141,17 @@ function BlowObject(hit : RaycastHit) {
 			isFlash = true;
 			flashGui.enabled = true;
 			audio.PlayOneShot(explodeSfx[Random.Range(0,explodeSfx.length)],1.0);
-			points -= 10;
+			points -= SharedSettings.junk;
+			PointScript.Point = SharedSettings.junk;
+			PointScript.type = "junk";
+			PointScript.operation = "-";
 			combos = 0;
 			//increase bomb frequency and size
 			//fruitDispenser.upBombPro();
 		}
 		if (points<0) points = 0;
 		finishGui.score = points;
+		Destroy(go);
 	}
 	hit.collider.gameObject.tag = "destroyed";
 	
