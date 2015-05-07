@@ -47,6 +47,10 @@ var isFlashIn : boolean = false;
 var isFlashOut : boolean = false;
 
 var scoreEffect : GameObject;
+var targetScore : int= 0;
+private var deltaPoint : int = 0;
+private var currentType: String;
+var guiPoints : GUIText;
 
 function Awake () {
 	cSize = Screen.width * 0.01;
@@ -54,7 +58,7 @@ function Awake () {
     flashGui.enabled = false;
     flashGui.pixelInset = new Rect(0f, 0f, Screen.width, Screen.height);
     combos = 0;
-    points = 0;
+    points = 0;	
 }
 
 function Flash()
@@ -104,11 +108,12 @@ function BlowObject(hit : RaycastHit) {
 		//if not bomb inc points
 		if (hit.collider.gameObject.tag !="bomb") {
 			if (hit.collider.gameObject.tag=="bonus"){ // bonus
-					points += SharedSettings.bonus;
+					targetScore += SharedSettings.bonus;
 					PointScript.Point = SharedSettings.bonus;
 					PointScript.type = "bonus";
 					combos = 0;
 					fruitDispenser.bonusOn = true;
+					currentType = "bonus";
 			}
 			else{
 				var index = 0;
@@ -120,9 +125,10 @@ function BlowObject(hit : RaycastHit) {
 				//splashZ.z = 9;	//back
 				//var ins2 = GameObject.Instantiate(splashFlatPrefab[index],splashZ,Quaternion.identity);		
 				audio.PlayOneShot(splatSfx[Random.Range(0,splatSfx.length)],1.0);
-				points += SharedSettings.fruit; 
+				targetScore += SharedSettings.fruit; 
 				PointScript.Point = SharedSettings.fruit;
 				PointScript.type = "fruit";
+				currentType = "fruit";
 				if (hit.collider.tag=="red-bonus" || hit.collider.tag=="yellow-bonus" || hit.collider.tag=="green-bonus");
 				else combos ++;
 				if (combos%6 == 0) audio.PlayOneShot(encourageSfx[Random.Range(0,encourageSfx.length)],1.0);
@@ -141,16 +147,17 @@ function BlowObject(hit : RaycastHit) {
 			isFlash = true;
 			flashGui.enabled = true;
 			audio.PlayOneShot(explodeSfx[Random.Range(0,explodeSfx.length)],1.0);
-			points -= SharedSettings.junk;
+			targetScore -= SharedSettings.junk;
 			PointScript.Point = SharedSettings.junk;
 			PointScript.type = "junk";
+			currentType = "junk";
 			PointScript.operation = "-";
 			combos = 0;
 			//increase bomb frequency and size
 			//fruitDispenser.upBombPro();
 		}
-		if (points<0) points = 0;
-		finishGui.score = points;
+		if (targetScore<0) targetScore = 0;
+		finishGui.score = targetScore;
 		Destroy(go);
 	}
 	hit.collider.gameObject.tag = "destroyed";
@@ -298,7 +305,31 @@ function Update () {
 	trail.SetColors(c1,c2);		
 	if (trial_alpha>0) 
 		trial_alpha -= Time.deltaTime;
-		
+	 	
+	deltaPoint += Time.deltaTime*42;
+	if (points < targetScore) {
+		if (currentType == "fruit"){
+			guiPoints.color = new Color (0,204.0f/255,0,1.0f);
+		}
+		else if (currentType == "bonus"){
+			guiPoints.color = new Color (1.0f,215.0f/255,0);	
+		}
+		if (deltaPoint > 1){
+			points += 1;
+			deltaPoint = 0;
+		}
+	}
+	else if (points > targetScore){
+		guiPoints.color = new Color (1.0f,0,0);
+		if (deltaPoint > 1){
+			points -= 1;
+			deltaPoint = 0;
+		}
+	}
+	else {
+		guiPoints.color = new Color (1,1,1);
+	}
+	guiPoints.text = points.ToString();
 	
 }
 

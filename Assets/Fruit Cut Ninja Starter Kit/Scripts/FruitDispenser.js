@@ -228,11 +228,11 @@ function OnTriggerEnter (other : Collider) {
 	//deduce point when fruit are not clicked
 	if (other.gameObject.tag =="red" || other.gameObject.tag =="yellow" 
 		|| other.gameObject.tag =="green") {
-		var points = mouseControl.points;
-		var combos = mouseControl.combos;
-		combos = 0;
-		points -= 2;
-		mouseControl.points = points>=0 ? points: 0;
+		mouseControl.combos = 0;
+		mouseControl.targetScore -= 2;
+		if (mouseControl.targetScore < 0){
+			mouseControl.targetScore = 0;
+		}
 	}	
     Destroy(other.gameObject);
 }
