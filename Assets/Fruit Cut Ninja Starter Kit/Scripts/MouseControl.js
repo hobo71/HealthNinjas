@@ -306,7 +306,7 @@ function Update () {
 	if (trial_alpha>0) 
 		trial_alpha -= Time.deltaTime;
 	 	
-	deltaPoint += Time.deltaTime*42;
+	deltaPoint += Time.deltaTime*65; //continuously increasing speed. larger the faster
 	if (points < targetScore) {
 		if (currentType == "fruit"){
 			guiPoints.color = new Color (0,204.0f/255,0,1.0f);

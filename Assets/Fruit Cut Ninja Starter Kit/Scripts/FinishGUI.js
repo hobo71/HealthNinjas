@@ -8,7 +8,7 @@ var connected: boolean;
 var buttonStr: String;
 var logStr: String;
 var bioharnessUpdate: BioharnessUpdate;
-var envUpdate: EnvironmentUpdate;
+var envUpdate: BiofeedbackUpdate;
 
 function Awake() {
 	scoreText = GameObject.Find("FinishedGUI/finalScore").GetComponent(GUIText);

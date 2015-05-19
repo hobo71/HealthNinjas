@@ -23,7 +23,7 @@ static var rrRange : float = highRR - targetRR;
 
 private var curActivity: AndroidJavaObject;
 var fruitDispenser: FruitDispenser;
-var envUpdate: EnvironmentUpdate;
+var envUpdate: BiofeedbackUpdate;
 var finishGui: FinishGUI;
 
 function Awake() {

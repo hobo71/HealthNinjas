@@ -4,7 +4,7 @@
 var GetReady : GameObject;
 var GO : GameObject;
 var started : boolean;
-var fpsgo : GameObject;
+//var fpsgo : GameObject;
 
 function Awake() {
 	//Set game time
