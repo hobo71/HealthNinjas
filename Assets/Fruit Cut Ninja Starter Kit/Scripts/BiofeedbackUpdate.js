@@ -1,64 +1,32 @@
 ﻿#pragma strict
-private static var s1: ParticleSystem;
-private static var s2: ParticleSystem;
-private static var s3: ParticleSystem;
-private static var fence: GameObject;
-
+var alpha : float;
 //resp property
-private static var highRR : float = SharedSettings.highRR;
-private static var targetRR : float = SharedSettings.targetRR;
-private static var transitRR : float = SharedSettings.transitRR;
+private var targetRR : float = SharedSettings.targetRR;
+private var transitRR : float = SharedSettings.transitRR;
 
 //environment
-private static var maxEmissionRate : float = 125;
-private static var minEmissionRate : float = 0;
-private static var maxWallPos : float = 5.6;
-private static var minWallPos : float = 0;
-private static var snowEmissionRate : float = minEmissionRate;
-private static var wallPos : float = minWallPos;
-private static var k : float = (maxWallPos-minWallPos)/(transitRR-targetRR);
-private static var b : float = maxWallPos - k*transitRR;
+private var minWallPos : float = -8.4;
+private var maxWallPos : float = -2.8;
+private var curWallPos : float = minWallPos;
+private var preWallPos : float = minWallPos;
+private var k : float = (maxWallPos - minWallPos) / (transitRR - targetRR);
 
-function Awake() {
-	s1 = GameObject.Find("Snow/s1").GetComponent(ParticleSystem);
-	s2 = GameObject.Find("Snow/s2").GetComponent(ParticleSystem);
-	s3 = GameObject.Find("Snow/s3").GetComponent(ParticleSystem);
-	fence = GameObject.Find("Fence");
-}
-
-function Start () {
-}
-
-function Update () {
-}
-
-function initEnv () {
-	snowEmissionRate = minEmissionRate;
-	wallPos = minWallPos;
-}
-
-//bioharness rr set bomb property
-function setEnvironment(rr:float){
-	if (rr >= highRR){ //too high
-		snowEmissionRate = maxEmissionRate;
-		wallPos = maxWallPos;
+//bioharness
+function updateEnvironment(rr:float){
+	var pos : float;
+	if (rr >= transitRR){ //wall max . guidance on
+		pos = maxWallPos;
 	}
-	else if (rr >= transitRR && rr < highRR){ //change mist alpha
-		var kk = (rr-transitRR)/(highRR-transitRR);
-		snowEmissionRate = maxEmissionRate * kk;
-		wallPos = maxWallPos;
-	}
-	else if (rr < transitRR && rr >= targetRR){ //change wall height
-		wallPos = k*rr + b;
-		snowEmissionRate = minEmissionRate;
+	else if (rr < transitRR && rr >= targetRR){ //smoothly change wall height
+		pos = minWallPos + k * (rr - targetRR);
 	} 
 	else { //good
-		snowEmissionRate = minEmissionRate;
-		wallPos = minWallPos;
+		pos = minWallPos;
 	}
+	curWallPos = preWallPos * alpha + pos * (1 - alpha);
+	preWallPos = curWallPos;
 }
 
 function OnGUI() {
-	fence.transform.position.y = wallPos;
-	s1.emissionRate = s2.emissionRate = s3.emissionRate = snowEmissionRate;
+	gameObject.transform.position.y = curWallPos;
 }

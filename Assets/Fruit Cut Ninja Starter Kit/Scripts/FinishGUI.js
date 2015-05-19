@@ -12,7 +12,6 @@ var envUpdate: BiofeedbackUpdate;
 
 function Awake() {
 	scoreText = GameObject.Find("FinishedGUI/finalScore").GetComponent(GUIText);
-	envUpdate.initEnv();
 }
 
 function LoadMenu()

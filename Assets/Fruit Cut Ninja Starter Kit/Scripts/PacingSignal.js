@@ -1,11 +1,11 @@
 ﻿#pragma strict
 
 var breathTime : float = 6.0f;
-var inhaleTime : float = 2.4f;
+var inhaleTime : float = 2.0f;
 var exhaleTime : float = breathTime - inhaleTime;
 
 private var minRange : float = 1.8f;
-private var maxRange : float = 15.8f;
+private var maxRange : float = 17.8f;
 private var kRangeInhale : float = (maxRange - minRange) / inhaleTime;
 private var kRangeExhale : float = (maxRange - minRange) / exhaleTime;
 
