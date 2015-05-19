@@ -16,8 +16,10 @@ var bombUpdateTimer : float = 3.0;
 private var started : boolean = false;
 private var powerMod : float;
 private static var bombProbability : float = 50.0f;
+private static var bonusProbability : float = 10.0f;
 
 function Awake() {
+	//Random.seed = 85599;
 	Physics.gravity.y = -3;
 	powerMod = 0.70;
 }
@@ -58,23 +60,26 @@ function FireUp () {
 		// Spawn(true) => junk food
 		if (bonusOn){
 			//bunch of bonus fruits
-			for (var j = 0;  j < 8; j++)
+			for (var j = 0;  j < 7; j++)
 				Spawn(4);
 			bonusOn = false;
 		}
 		else{
-			if (mouseControl.combos/6>0){ //bonus
+			//bonus
+			var p = Random.Range(0,100);
+			if (p < bonusProbability || mouseControl.combos/10>0){
 				Spawn(3);
-				mouseControl.combos = 0;
+				if (mouseControl.combos/10 > 0) {
+					mouseControl.combos = 0;
+				}
 			}
 			for (var i = 0; i < 2; i++){
-				var p = Random.Range(0,100);
-				//Debug.Log(p);
-				if (p < bombProbability){
+				p = Random.Range(0,100);
+				if (p < bombProbability){ //bomb
 					Spawn(1);
 				}
 				else{
-					Spawn(2);
+					Spawn(2); //fruit
 				}
 			}
 		}
