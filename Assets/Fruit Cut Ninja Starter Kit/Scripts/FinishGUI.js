@@ -4,14 +4,10 @@
 var skin : GUISkin;
 var scoreText: GUIText ;
 var score: int;
-var connected: boolean;
-var buttonStr: String;
-var logStr: String;
 var bioharnessUpdate: BioharnessUpdate;
 var envUpdate: FenceUpdate;
 
 function Awake() {
-	scoreText = GameObject.Find("FinishedGUI/finalScore").GetComponent(GUIText);
 }
 
 function LoadMenu()
@@ -23,31 +19,21 @@ function LoadMenu()
 function RestartLevel()
 {
 	yield WaitForSeconds(1.0);
-	Application.LoadLevel("game");
-}
-
-function NextLevel()
-{
-	yield WaitForSeconds(1.0);
-	SharedSettings.LoadLevel = SharedSettings.LoadLevel + 1;
-	Application.LoadLevel("game");	
+	Application.LoadLevel(0);
 }
 
 function OnGUI() {
 	GUI.skin = skin;
-	/*
-	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.6,0.3,0.075),"Menu")) {
-		LoadMenu();
-	}
-	*/
-
+	
 	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.7,0.3,0.075),"Restart")) {
 		RestartLevel();
 	}
+	
 	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.8,0.3,0.075),"Exit")) {
 		PlayerPrefs.DeleteAll();
 		Application.Quit();
 		
 	}
+	
 	scoreText.text = "Final Points:"+score;
 }

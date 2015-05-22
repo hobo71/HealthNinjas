@@ -29,9 +29,9 @@ function OnGUI() {
 	}
 	
 	GUI.skin = PointSkinShadow;
-	GUI.Label (Rect (screenPos2.x+8 , targY-2, 80, 70), operation + Point.ToString());
+	GUI.Label (Rect (screenPos2.x+8 , targY-2, 300, 300), operation + Point.ToString());
 	GUI.skin = PointSkin;
-	GUI.Label (Rect (screenPos2.x+10 , targY, 120, 120), operation + Point.ToString());
+	GUI.Label (Rect (screenPos2.x+10 , targY, 300, 300), operation + Point.ToString());
 	if (GetHitEffect > 100){
 		Destroy(gameObject);
 	}

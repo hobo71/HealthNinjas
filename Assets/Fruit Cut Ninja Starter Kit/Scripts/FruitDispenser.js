@@ -20,7 +20,7 @@ private var bombProbability : float = 50.0f;
 private var targetRR : float = SharedSettings.targetRR;
 private var transitRR : float = SharedSettings.transitRR;
 //bonus prob
-private var minBonusProbability : float = 0.0f;
+private var minBonusProbability : float = 10.0f;
 private var maxBonusProbability : float = 100.0f;
 private var kBonus : float = (maxBonusProbability - maxBonusProbability) / (transitRR - targetRR);
 private var bonusProbability : float = minBonusProbability;
@@ -140,13 +140,12 @@ function Spawn(type : int) {
 		ins = GameObject.Instantiate(fruits[i],transform.position + Vector3(x,0,z),Random.rotation);
 		ins.tag = fruitsCombo[i];
 	}
-	//apply specific settings
 	if (type==3){ //super fruit
 		var y = Random.Range(0,3);
 		var xs = [-8,8];
 		x = xs[Random.Range(0,2)];
 		ins = GameObject.Instantiate(bonus[Random.Range(0,bonus.length)],transform.position + Vector3(x,y,z),Random.rotation);
-		power = Random.Range(1.8,2.0) * -Physics.gravity.y * 2 * powerMod;
+		power = Random.Range(1.9,2.0) * -Physics.gravity.y * 2 * powerMod;
 		direction = Vector3(-x * 0.2 * Random.Range(0.3,0.5),0.5,0);
 		ins.rigidbody.AddTorque(Random.onUnitSphere * 0.8,ForceMode.Impulse);
 	}
@@ -164,6 +163,7 @@ function Spawn(type : int) {
 
 function OnTriggerEnter (other : Collider) {
 	//deduce point when fruit are not clicked
+    Destroy(other.gameObject);
 	if (other.gameObject.tag =="red" || other.gameObject.tag =="yellow" 
 		|| other.gameObject.tag =="green") {
 		mouseControl.combos = 0;
@@ -172,7 +172,9 @@ function OnTriggerEnter (other : Collider) {
 			mouseControl.targetScore = 0;
 		}
 	}	
-    Destroy(other.gameObject);
+    else if (other.gameObject.tag == "bonus"){
+    	Destroy(other.gameObject.transform.parent.gameObject);
+    }
 }
 
 /*
