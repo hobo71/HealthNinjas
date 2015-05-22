@@ -50,11 +50,12 @@ function OnGUI() {
 	if (!GameObject.Find("MainScripts").GetComponent(PrepareLevel).started) 
 		GUI.enabled = false;
 	
-	if (GUI.Button(HelpClass.ScrRectCenter2(0.075,0.965,0.14,0.065),"Exit")) 
+	if (GUI.Button(HelpClass.ScrRectCenter2(0.075,0.965,0.14,0.065),"Exit")) {
 		ExitGame();
-	if (GUI.Button(HelpClass.ScrRectCenter2(0.925,0.965,0.14,0.065),"Pause")) 
+	}
+	if (GUI.Button(HelpClass.ScrRectCenter2(0.925,0.965,0.14,0.065),"Pause")) {
 		Pause();
-    
+    }
     GUI.enabled = true;
     
 }

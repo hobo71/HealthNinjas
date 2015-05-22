@@ -1,11 +1,11 @@
 ﻿#pragma strict
 
-var breathTime : float = 6.0f;
+var breathTime : float = 5.0f;
 var inhaleTime : float = 2.0f;
 var exhaleTime : float = breathTime - inhaleTime;
 
-private var minRange : float = 1.8f;
-private var maxRange : float = 17.8f;
+private var minRange : float = 1.0f;
+private var maxRange : float = 12.6f;
 private var kRangeInhale : float = (maxRange - minRange) / inhaleTime;
 private var kRangeExhale : float = (maxRange - minRange) / exhaleTime;
 
@@ -21,7 +21,7 @@ function Start () {
 }
 
 function Update () {
-	var curTime = timer.curTime % 6;
+	var curTime = timer.curTime % breathTime;
 	if (curTime < inhaleTime) {
 		li.range = minRange + kRangeInhale * curTime;
 		//li.color.a = minAlpha + kAlphaInhale * curTime;

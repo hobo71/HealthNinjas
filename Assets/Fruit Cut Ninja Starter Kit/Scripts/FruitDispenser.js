@@ -15,13 +15,23 @@ var timer : float = 3.0;
 var bombUpdateTimer : float = 3.0;
 private var started : boolean = false;
 private var powerMod : float;
-private static var bombProbability : float = 50.0f;
-private static var bonusProbability : float = 10.0f;
+private var bombProbability : float = 50.0f;
+//resp property
+private var targetRR : float = SharedSettings.targetRR;
+private var transitRR : float = SharedSettings.transitRR;
+//bonus prob
+private var minBonusProbability : float = 0.0f;
+private var maxBonusProbability : float = 100.0f;
+private var kBonus : float = (maxBonusProbability - maxBonusProbability) / (transitRR - targetRR);
+private var bonusProbability : float = minBonusProbability;
+private var threshold : int = 3;
+private var rrs : Array;
 
 function Awake() {
 	//Random.seed = 85599;
 	Physics.gravity.y = -3;
 	powerMod = 0.70;
+	rrs = new Array();
 }
 
 function Update() {
@@ -53,6 +63,32 @@ function Update() {
 	}
 }
 
+//bioharness
+function updateBonusProb(rr : float){
+	if (rr >= transitRR){ //bad
+		bonusProbability = minBonusProbability;
+	}
+	else if (rr < transitRR && rr >= targetRR){
+		bonusProbability = minBonusProbability + kBonus * (rr - targetRR);
+	} 
+	else { //good
+		bonusProbability = maxBonusProbability;
+	}
+	/*
+	//decreasing reward
+	rrs.Add(rr);
+	var length = rrs.length;
+	if (length > threshold) {
+		var pv : float = rrs[length - 1];
+		var cv : float = rrs[length - 1 - threshold];
+		if (pv > cv) {
+			Spawn(3);
+		}
+	}
+	*/
+	
+}
+
 function FireUp () {
 	if (pause) return;
 	else{
@@ -69,23 +105,19 @@ function FireUp () {
 			var p = Random.Range(0,100);
 			if (p < bonusProbability || mouseControl.combos/10>0){
 				Spawn(3);
-				if (mouseControl.combos/10 > 0) {
-					mouseControl.combos = 0;
-				}
+				mouseControl.combos = 0;
 			}
 			for (var i = 0; i < 2; i++){
 				p = Random.Range(0,100);
 				if (p < bombProbability){ //bomb
 					Spawn(1);
-				}
-				else{
+				} else{
 					Spawn(2); //fruit
 				}
 			}
 		}
 	}
 }
-
 
 function Spawn(type : int) {
 	var x : float = Random.Range(-4.0,4);
@@ -126,7 +158,7 @@ function Spawn(type : int) {
 	//common settings
 	direction.z = 0.0;
 	ins.rigidbody.velocity =  direction * power;
-	audio.PlayOneShot(sfx,1.0);
+	//audio.PlayOneShot(sfx,1.0);
 	
 }
 

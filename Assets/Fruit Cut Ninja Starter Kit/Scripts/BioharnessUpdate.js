@@ -7,7 +7,7 @@ private var repirationRate: String = "N/A";
 
 private var curActivity: AndroidJavaObject;
 var fruitDispenser: FruitDispenser;
-var envUpdate: BiofeedbackUpdate;
+var envUpdate: FenceUpdate;
 var finishGui: FinishGUI;
 private var rrText: GUIText;
 
@@ -31,7 +31,8 @@ function SetLog(str: String) {
 function SetRepirationRate(str: String) {
 	repirationRate = str;
 	var rr = float.Parse(repirationRate);
-	envUpdate.updateEnvironment(rr);
+	envUpdate.updateHeight(rr);
+	fruitDispenser.updateBonusProb(rr);
 }
 
 // Use this for initialization

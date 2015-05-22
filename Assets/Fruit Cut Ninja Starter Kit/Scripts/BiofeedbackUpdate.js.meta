@@ -1,9 +1,0 @@
-fileFormatVersion: 2
-guid: 63f2f8ad3e96a2e4190c03aedac91ebc
-MonoImporter:
-  serializedVersion: 2
-  defaultReferences:
-  - fence: {fileID: 100004, guid: 7359e0b5e337a1049bff71ec0ed1ba66, type: 2}
-  executionOrder: 0
-  icon: {instanceID: 0}
-  userData: 
