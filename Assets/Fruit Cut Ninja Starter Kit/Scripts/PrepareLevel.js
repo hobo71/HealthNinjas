@@ -7,8 +7,10 @@ var started : boolean;
 //var fpsgo : GameObject;
 
 function Awake() {
+	
 	//Set game time
 	GetComponent(Timer).timeAvailable = SharedSettings.ConfigTime;
+	
 }
 
 function PrepareRoutine()
