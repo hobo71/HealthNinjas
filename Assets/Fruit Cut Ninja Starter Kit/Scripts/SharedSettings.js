@@ -6,6 +6,7 @@
 static var ConfigTime : int = 300;
 
 //respiration value
+static var maxRR : float = 24.0f;
 static var transitRR : float = 18.0f;
 static var targetRR : float = 12.0f;
 

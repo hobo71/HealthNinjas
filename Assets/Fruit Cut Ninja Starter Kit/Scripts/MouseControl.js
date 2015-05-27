@@ -331,6 +331,7 @@ function Update () {
 	}
 	guiPoints.text = points.ToString();
 	
+	//Debug.Log(Time.deltaTime);	
 }
 
 

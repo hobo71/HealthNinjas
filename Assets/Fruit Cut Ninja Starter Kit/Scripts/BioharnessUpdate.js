@@ -5,15 +5,23 @@ static var strLog: String = "disconnected";
 static var buttonStr: String = "connect";
 private var repirationRate: String = "N/A";
 
+//resp property
+private var targetRR : float = SharedSettings.targetRR;
+private var transitRR : float = SharedSettings.transitRR;
+private var maxRR : float = SharedSettings.maxRR;
+
 private var curActivity: AndroidJavaObject;
 var fruitDispenser: FruitDispenser;
 var envUpdate: FenceUpdate;
 var finishGui: FinishGUI;
 private var rrText: GUIText;
+private var respBar: GUITexture;
 
 function Awake() {
 	var jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 	curActivity = jc.GetStatic.<AndroidJavaObject>("currentActivity");
+	rrText = GameObject.Find("GUI/RespBar/text").GetComponent(GUIText);
+	respBar = GameObject.Find("GUI/RespBar/bar").GetComponent(GUITexture);
 }
 
 function SetLog(str: String) {
@@ -55,7 +63,38 @@ function OnGUI() {
 			isConnected = 0;
 			buttonStr = "connect";
 			repirationRate = "N/A";
+			respBar.pixelInset.height = 0;
 			rrText.color = Color.white;
 		}
 	}
+	
+	rrText.text = repirationRate;
+	//respiration bar
+	if (repirationRate == "N/A");
+	else{
+		var rr = Mathf.Round(parseFloat(repirationRate)*100)/100;
+		if (rr > maxRR){ 
+			rr = maxRR;
+		}
+		respBar.pixelInset.width = (220 / maxRR)* rr;
+
+		//set color of texture
+		if (rr < targetRR){ 
+			//green means good
+			respBar.color = Color.green;
+			rrText.color = Color.green;
+		}
+		else if(rr < transitRR){
+			//green to red means in range
+			respBar.color = Color.Lerp(Color.green, Color.red, (rr - targetRR) / (transitRR - targetRR));
+			rrText.color = Color.Lerp(Color.green, Color.red, (rr - targetRR) / (transitRR - targetRR));
+		}
+		else{
+			//red out of range
+			respBar.color = Color.red;
+			rrText.color = Color.red;
+		}
+	}
+	
+	
 }
