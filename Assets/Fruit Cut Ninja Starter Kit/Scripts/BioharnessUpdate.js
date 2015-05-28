@@ -12,10 +12,20 @@ private var maxRR : float = SharedSettings.maxRR;
 
 private var curActivity: AndroidJavaObject;
 var fruitDispenser: FruitDispenser;
-var envUpdate: FenceUpdate;
+var fenceUpdate: FenceUpdate;
 var finishGui: FinishGUI;
 private var rrText: GUIText;
 private var respBar: GUITexture;
+
+//PD control var
+private var alpha: float = 0.005f; 
+private var beta: float = 0.09f; 
+private var dt: float = 0.1f;
+private var rrInThisSecond: float = 0.0f; //updated rr from bioharness
+private var rrAtThisFrame: float = 0.0f; //rr at frame t
+private var rr_1: float = 0.0f; //rr at frame t-1
+private var rr_2: float = 0.0f; //rr at frame t-2
+private var curTime: float = 0.0f;
 
 function Awake() {
 	var jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -38,17 +48,28 @@ function SetLog(str: String) {
 
 function SetRepirationRate(str: String) {
 	repirationRate = str;
-	var rr = float.Parse(repirationRate);
-	envUpdate.updateHeight(rr);
-	fruitDispenser.updateBonusProb(rr);
+	if (str != "N/A") {
+		rrInThisSecond = float.Parse(repirationRate);
+		fruitDispenser.updateBonusProb(rrInThisSecond);
+	}
 }
 
 // Use this for initialization
 function Start () {
 }
 	
-// Update is called once per frame
+// Update fence height once per frame
 function Update () {
+	if (curTime > dt) {
+		curTime = 0;
+		rrAtThisFrame = rr_1 - (rr_1 - rrInThisSecond) * alpha - (rr_2 - rr_1) / dt * beta;
+		fenceUpdate.updateHeight(rrAtThisFrame);
+		rr_2 = rr_1;
+		rr_1 = rrAtThisFrame;	
+	} else {
+		curTime += Time.deltaTime;
+	}
+	
 }
 
 function OnGUI() {
@@ -68,11 +89,11 @@ function OnGUI() {
 		}
 	}
 	
-	rrText.text = repirationRate;
+	rrText.text = rrAtThisFrame + "";
 	//respiration bar
 	if (repirationRate == "N/A");
 	else{
-		var rr = Mathf.Round(parseFloat(repirationRate)*100)/100;
+		var rr = Mathf.Round(rrAtThisFrame * 100) / 100;
 		if (rr > maxRR){ 
 			rr = maxRR;
 		}
