@@ -9,6 +9,7 @@ var started : boolean;
 function Awake() {
 	//Set game time
 	GetComponent(Timer).timeAvailable = SharedSettings.ConfigTime;
+	//GUI.Button(HelpClass.ScrRectCenter2(0.075,0.965,0.3,0.3),"Exit");
 }
 
 function PrepareRoutine()

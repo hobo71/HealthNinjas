@@ -47,7 +47,7 @@ var isFlashIn : boolean = false;
 var isFlashOut : boolean = false;
 
 var scoreEffect : GameObject;
-var targetScore : int= 0;
+var targetScore : int = 0;
 private var deltaPoint : int = 0;
 private var currentType: String;
 var guiPoints : GUIText;

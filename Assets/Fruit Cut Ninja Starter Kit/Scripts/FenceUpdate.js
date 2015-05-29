@@ -5,8 +5,8 @@ private var targetRR : float = SharedSettings.targetRR;
 private var transitRR : float = SharedSettings.transitRR;
 
 //environment
-private var minWallPos : float = -10;
-private var maxWallPos : float = -3.25;
+var minWallPos : float = -10.55;
+var maxWallPos : float = -3.13;
 private var curWallPos : float = minWallPos;
 private var preWallPos : float = minWallPos;
 private var k : float = (maxWallPos - minWallPos) / (transitRR - targetRR);

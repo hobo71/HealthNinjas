@@ -25,11 +25,11 @@ function RestartLevel()
 function OnGUI() {
 	GUI.skin = skin;
 	
-	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.7,0.3,0.075),"Restart")) {
+	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.5,0.3,0.075),"Restart")) {
 		RestartLevel();
 	}
 	
-	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.8,0.3,0.075),"Exit")) {
+	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.7,0.3,0.075),"Exit")) {
 		PlayerPrefs.DeleteAll();
 		Application.Quit();
 		
