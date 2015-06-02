@@ -2,8 +2,9 @@
 
 #pragma strict
 var mouseControl : MouseControl;
+var timer : Timer;
 var fruits : GameObject[];
-var bombs : GameObject[];
+var junks : GameObject[];
 var bonus : GameObject[];
 private var fruitsCombo : String[] = ["yellow-bonus","red-bonus","green-bonus"];
 
@@ -11,108 +12,90 @@ var bonusOn : boolean = false;
 var z : float;
 var sfx : AudioClip;
 var pause : boolean = false;
-var timer : float = 3.0;
-var bombUpdateTimer : float = 3.0;
+
 private var started : boolean = false;
 private var powerMod : float;
-private var bombProbability : float = 50.0f;
-//resp property
+//default property
 private var targetRR : float = SharedSettings.targetRR;
 private var transitRR : float = SharedSettings.transitRR;
-//bonus prob
-private var minBonusProbability : float = 10.0f;
-private var maxBonusProbability : float = 100.0f;
-private var kBonus : float = (maxBonusProbability - maxBonusProbability) / (transitRR - targetRR);
-private var bonusProbability : float = minBonusProbability;
-private var threshold : int = 3;
-private var rrs : Array;
+private var sfInterval : float = 25.0f; //super fruit interval
+//Junk/Health proportion
+private var maxJunkProb : float = 100.0f;
+private var minJunkProb : float = 40.0f;
+private var kJunkProb : float = (maxJunkProb - minJunkProb) / (transitRR - targetRR);
+private var junkProb : float = minJunkProb;
+//dispense frequency
+private var minDisInterval : float = 0.40f;
+private var maxDisInterval : float = 1.25f;
+private var kDis : float = (maxDisInterval - minDisInterval) / (transitRR - targetRR);
+private var disInterval : float = maxDisInterval;
+private var curTime : float = 3.0f;
+
 
 function Awake() {
-	//Random.seed = 85599;
+	Random.seed = 85599;
 	Physics.gravity.y = -3;
 	powerMod = 0.70;
-	rrs = new Array();
 }
 
 function Update() {
 	if (pause) return;
-	timer -= Time.deltaTime;
-	//bombUpdateTimer -= Time.deltaTime;
+	curTime -= Time.deltaTime;
 
-	if (timer<=0.0 && !started) {
-		timer = 0.0;
+	if (curTime <= 0.0 && !started) {
+		curTime = 0.0;
 		started = true;
 	}
 
 	if (started) {
-		if (timer<=0.0) {
+		if (curTime <= 0.0) {
 			FireUp();
-			timer = 1.25;
+			curTime = disInterval;
 		}
-		/*if (bombUpdateTimer<=0.0) {
-			//Debug.Log("bombUpdate");
-			//bombUpdateTimer = 3.0;
-			var currentBombs = GameObject.FindGameObjectsWithTag("bomb"); 
-			if (currentBombs == null);
-			else{
-				for (var b in currentBombs){
-					b.transform.localScale = bombSize;
-				}
-			}
-		}*/
 	}
 }
 
-//bioharness
-function updateBonusProb(rr : float){
-	if (rr >= transitRR){ //bad
-		bonusProbability = minBonusProbability;
+//biofeedback update
+function bfUpdate(rr : float){
+	if (rr > transitRR){ //too high
+		junkProb = maxJunkProb;
+		//disInterval = minDisInterval;
 	}
-	else if (rr < transitRR && rr >= targetRR){
-		bonusProbability = minBonusProbability + kBonus * (rr - targetRR);
-	} 
+	else if (rr <= transitRR && rr >= targetRR){ //in range
+		junkProb = minJunkProb + (rr - targetRR) * kJunkProb;
+		//disInterval = maxDisInterval - (rr - targetRR) * kDis;
+	}
 	else { //good
-		bonusProbability = maxBonusProbability;
+		junkProb = minJunkProb;
+		//disInterval = maxDisInterval;
 	}
-	/*
-	//decreasing reward
-	rrs.Add(rr);
-	var length = rrs.length;
-	if (length > threshold) {
-		var pv : float = rrs[length - 1];
-		var cv : float = rrs[length - 1 - threshold];
-		if (pv > cv) {
-			Spawn(3);
-		}
-	}
-	*/
-	
 }
 
 function FireUp () {
 	if (pause) return;
 	else{
-		// Spawn(false) => fruit 
-		// Spawn(true) => junk food
+		// Spawn(1) => fruit 
+		// Spawn(2) => junk food
+		// Spawn(3) => super fruit 
+		// Spawn(4) => bonus fruits
 		if (bonusOn){
 			//bunch of bonus fruits
-			for (var j = 0;  j < 7; j++)
-				Spawn(4);
+			for (var j = 0;  j < 8; j++)
+				Spawn(4); //bonus fruits
 			bonusOn = false;
 		}
 		else{
-			//bonus
-			var p = Random.Range(0,100);
-			if (p < bonusProbability || mouseControl.combos/10>0){
-				Spawn(3);
+			if (timer.curTime % sfInterval < 1.0f && disInterval > 0.8f || mouseControl.combos/10 > 0){
+				Spawn(3); //super fruit
 				mouseControl.combos = 0;
 			}
+			//spawn 2 
 			for (var i = 0; i < 2; i++){
-				p = Random.Range(0,100);
-				if (p < bombProbability){ //bomb
-					Spawn(1);
+				var p = Random.Range(0,100);
+				if (p < junkProb){ //junk food
+					Spawn(2);
 				} else{
-					Spawn(2); //fruit
+					Spawn(1); //fruit
 				}
 			}
 		}
@@ -130,9 +113,9 @@ function Spawn(type : int) {
 	if (type==1) { //fruit : 1
 		ins = GameObject.Instantiate(fruits[Random.Range(0,fruits.length)],transform.position + Vector3(x,0,z),Random.rotation);
 	}
-	else if (type==2){ //bomb: 2
+	else if (type==2){ //junk: 2
 		z = Random.Range(0,0.3);
-		ins = GameObject.Instantiate(bombs[Random.Range(0,bombs.length)],transform.position + Vector3(x,0,z),Random.rotation);
+		ins = GameObject.Instantiate(junks[Random.Range(0,junks.length)],transform.position + Vector3(x,0,z),Random.rotation);
 		//ins.transform.localScale = bombSize;
 	}
 	else if (type==4){ //bonus fruit: 4 - does not count combos on them
@@ -148,6 +131,7 @@ function Spawn(type : int) {
 		power = Random.Range(1.9,2.0) * -Physics.gravity.y * 2 * powerMod;
 		direction = Vector3(-x * 0.2 * Random.Range(0.3,0.5),0.5,0);
 		ins.rigidbody.AddTorque(Random.onUnitSphere * 0.8,ForceMode.Impulse);
+		audio.PlayOneShot(sfx,1.0);
 	}
 	else{ //other common objects
 		power = Random.Range(1.5,1.8) * -Physics.gravity.y * 1.5 * powerMod;
@@ -157,8 +141,6 @@ function Spawn(type : int) {
 	//common settings
 	direction.z = 0.0;
 	ins.rigidbody.velocity =  direction * power;
-	//audio.PlayOneShot(sfx,1.0);
-	
 }
 
 function OnTriggerEnter (other : Collider) {
@@ -176,67 +158,3 @@ function OnTriggerEnter (other : Collider) {
     	Destroy(other.gameObject.transform.parent.gameObject);
     }
 }
-
-/*
-//static 
-private static var bombProbability : float = 0;
-private static var bombSize : Vector3 = Vector3(1.00f, 1.00f, 1.00f);
-
-//bomb property
-private static var initialBombProbability: float = 10.0f;
-private static var maxBombProbability: float = 90.0f;
-private static var bombProbabilityPenalty: float = (maxBombProbability - initialBombProbability)/rrRange;
-
-private static var initialBombSize: float = 1.0f;
-private static var maxBombSize: float = 2.0f;
-private static var bombSizePenalty: float = (maxBombSize - initialBombSize)/rrRange;
-
-function initBombPro(){
-	//bombProbability = initialBombProbability;
-	bombProbability = 50.0f;
-	bombSize = Vector3(initialBombSize,initialBombSize,initialBombSize);
-}
-
-//bioharness rr set bomb property
-function setBombPro(rr:float){
-	var dif = rr - targetRR;
-	if (dif > rrRange){ //too high
-		bombProbability = maxBombProbability;
-		bombSize = Vector3(maxBombSize, maxBombSize, maxBombSize);
-	}
-	else if (dif > 0 && dif < rrRange){ //in range
-		bombProbability = initialBombProbability + dif*bombProbabilityPenalty;
-		var newSize = initialBombSize + bombSizePenalty*dif;
-		bombSize = Vector3(newSize, newSize, newSize);
-	}
-	else { //good
-		bombProbability = initialBombProbability;
-		bombSize = Vector3(initialBombSize, initialBombSize, initialBombSize);
-	}
-}
-
-//click junk food penalty
-function upBombPro(){
-	//Debug.Log("upBombPro called");
-	bombProbability += 5;
-	if (bombProbability > maxBombProbability) {
-		bombProbability = maxBombProbability;
-	}
-	
-	bombSize += Vector3(0.1f, 0.1f, 0.1f);
-	if (bombSize.x > maxBombSize){
-		bombSize = Vector3(maxBombSize, maxBombSize, maxBombSize);
-	}
-}
-
-//click fruits bonus
-function downBombPro(){
-	//Debug.Log("downBombPro called");
-	if (bombProbability > initialBombProbability) {
-		bombProbability -= 1.5;
-	}
-	if (bombSize.x > 1){
-		bombSize -= Vector3(0.02f, 0.02f, 0.02f);
-	}
-}
-*/

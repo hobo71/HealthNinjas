@@ -4,8 +4,7 @@
 var skin : GUISkin;
 var scoreText: GUIText ;
 var score: int;
-var bioharnessUpdate: BioharnessUpdate;
-var envUpdate: FenceUpdate;
+var fenceUpdate: FenceUpdate;
 
 function Awake() {
 }
@@ -34,6 +33,6 @@ function OnGUI() {
 		Application.Quit();
 		
 	}
-	
+	fenceUpdate.resetFence();
 	scoreText.text = "Final Points:"+score;
 }

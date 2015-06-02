@@ -27,6 +27,10 @@ function updateHeight(rr:float){
 	preWallPos = curWallPos;
 }
 
+function resetFence(){
+	curWallPos = minWallPos;
+}
+
 function OnGUI() {
 	gameObject.transform.position.y = curWallPos;
 }

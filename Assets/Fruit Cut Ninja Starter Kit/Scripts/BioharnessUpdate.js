@@ -57,7 +57,7 @@ function SetRepirationRate(str: String) {
 	repirationRate = str;
 	if (str != "N/A") {
 		rrInThisSecond = float.Parse(repirationRate);
-		fruitDispenser.updateBonusProb(rrInThisSecond);
+		fruitDispenser.bfUpdate(rrInThisSecond);
 	}
 }
 
