@@ -57,7 +57,9 @@ function SetRepirationRate(str: String) {
 	repirationRate = str;
 	if (str != "N/A") {
 		rrInThisSecond = float.Parse(repirationRate);
-		fruitDispenser.bfUpdate(rrInThisSecond);
+		if (Application.loadedLevel == SharedSettings.NEBF_Indirect) {
+			fruitDispenser.junkUpdate(rrInThisSecond);
+		}
 	}
 }
 
@@ -67,17 +69,19 @@ function Start () {
 	
 // Update fence height once per dt
 function Update () {
-	if (isConnected) {
-		if (curTime > dt) {
-			curTime = 0;
-			rrAtThisDt = rr_1 - (rr_1 - rrInThisSecond) * alpha - (rr_2 - rr_1) / dt * beta;
-			fenceUpdate.updateHeight(rrAtThisDt);
-			rr_2 = rr_1;
-			rr_1 = rrAtThisDt;	
-		} else {
-			curTime += Time.deltaTime;
-		}
-	}	
+	if (Application.loadedLevel == SharedSettings.NEBF_Direct) {
+		if (isConnected) {
+			if (curTime > dt) {
+				curTime = 0;
+				rrAtThisDt = rr_1 - (rr_1 - rrInThisSecond) * alpha - (rr_2 - rr_1) / dt * beta;
+				fenceUpdate.updateHeight(rrAtThisDt);
+				rr_2 = rr_1;
+				rr_1 = rrAtThisDt;	
+			} else {
+				curTime += Time.deltaTime;
+			}
+		}	
+	}
 }
 
 function OnGUI() {

@@ -56,7 +56,7 @@ function Update() {
 }
 
 //biofeedback update
-function bfUpdate(rr : float){
+function junkUpdate(rr : float){
 	if (rr > transitRR){ //too high
 		junkProb = maxJunkProb;
 		//disInterval = minDisInterval;
@@ -85,7 +85,7 @@ function FireUp () {
 			bonusOn = false;
 		}
 		else{
-			if (timer.curTime % sfInterval < 1.0f && disInterval > 0.8f || mouseControl.combos/10 > 0){
+			if (timer.curTime > 10 && timer.curTime % sfInterval < 1.0f && disInterval > 0.8f || mouseControl.combos/10 > 0){
 				Spawn(3); //super fruit
 				mouseControl.combos = 0;
 			}

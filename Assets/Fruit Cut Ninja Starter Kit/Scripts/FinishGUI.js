@@ -18,7 +18,7 @@ function LoadMenu()
 function RestartLevel()
 {
 	yield WaitForSeconds(1.0);
-	Application.LoadLevel(0);
+	Application.LoadLevel(SharedSettings.loadedLevel);
 }
 
 function OnGUI() {
@@ -33,6 +33,8 @@ function OnGUI() {
 		Application.Quit();
 		
 	}
-	fenceUpdate.resetFence();
+	if (SharedSettings.loadedLevel == SharedSettings.NEBF_Direct) {
+		fenceUpdate.resetFence();
+	}
 	scoreText.text = "Final Points:"+score;
 }

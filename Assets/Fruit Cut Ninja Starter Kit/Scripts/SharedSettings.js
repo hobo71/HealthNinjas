@@ -14,3 +14,11 @@ static var targetRR : float = 12.0f;
 static var bonus : int = 30;
 static var fruit : int = 5;
 static var junk : int = 10;
+
+
+static var Menu : int = 0;
+static var NEBF_Direct : int = 1;
+static var NEBF_Indirect : int = 2;
+static var NE_Control : int = 3;
+static var BF_Only : int = 4;
+static var loadedLevel : int = Menu;
