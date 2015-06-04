@@ -20,10 +20,10 @@ private var targetRR : float = SharedSettings.targetRR;
 private var transitRR : float = SharedSettings.transitRR;
 private var sfInterval : float = 25.0f; //super fruit interval
 //Junk/Health proportion
-private var maxJunkProb : float = 100.0f;
-private var minJunkProb : float = 40.0f;
-private var kJunkProb : float = (maxJunkProb - minJunkProb) / (transitRR - targetRR);
-private var junkProb : float = minJunkProb;
+var maxJunkProb : float = 100.0f;
+var minJunkProb : float = 40.0f;
+var kJunkProb : float = (maxJunkProb - minJunkProb) / (transitRR - targetRR);
+var junkProb : float = minJunkProb;
 //dispense frequency
 private var minDisInterval : float = 0.40f;
 private var maxDisInterval : float = 1.25f;

@@ -20,7 +20,6 @@ function Pause() {
 
 		Time.timeScale = 1.0;
 	}
-
 }
 
 function LoadMenu()

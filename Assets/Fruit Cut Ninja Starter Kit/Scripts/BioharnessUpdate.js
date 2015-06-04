@@ -69,18 +69,19 @@ function Start () {
 	
 // Update fence height once per dt
 function Update () {
-	if (Application.loadedLevel == SharedSettings.NEBF_Direct) {
-		if (isConnected) {
-			if (curTime > dt) {
-				curTime = 0;
-				rrAtThisDt = rr_1 - (rr_1 - rrInThisSecond) * alpha - (rr_2 - rr_1) / dt * beta;
+	if (isConnected) {
+		if (curTime > dt) {
+			curTime = 0;
+			rrAtThisDt = rr_1 - (rr_1 - rrInThisSecond) * alpha - (rr_2 - rr_1) / dt * beta;
+			if (Application.loadedLevel == SharedSettings.NEBF_Direct || 
+				Application.loadedLevel == SharedSettings.BF_Only){
 				fenceUpdate.updateHeight(rrAtThisDt);
-				rr_2 = rr_1;
-				rr_1 = rrAtThisDt;	
-			} else {
-				curTime += Time.deltaTime;
 			}
-		}	
+			rr_2 = rr_1;
+			rr_1 = rrAtThisDt;	
+		} else {
+			curTime += Time.deltaTime;
+		}
 	}
 }
 
@@ -102,7 +103,13 @@ function OnGUI() {
 			rrText.text = "disconnected"; 
 			//reset fence
 			curTime = 0;
-			fenceUpdate.updateHeight(fenceUpdate.minWallPos);
+			if (Application.loadedLevel == SharedSettings.NEBF_Direct || 
+				Application.loadedLevel == SharedSettings.BF_Only){
+				fenceUpdate.updateHeight(fenceUpdate.minWallPos);
+			}
+			if (Application.loadedLevel == SharedSettings.NEBF_Indirect){
+				fruitDispenser.junkUpdate(fruitDispenser.minJunkProb);
+			}
 		}
 	}
 	if (isConnected) {
