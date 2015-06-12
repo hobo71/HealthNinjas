@@ -99,8 +99,8 @@ function OnGUI() {
 			buttonStr = "connect";
 			repirationRate = "N/A";
 			respBar.pixelInset.width = 0;
-			rrText.color = Color.white;
-			rrText.text = "disconnected"; 
+			//rrText.color = Color.white;
+			//rrText.text = "disconnected"; 
 			//reset fence
 			curTime = 0;
 			if (Application.loadedLevel == SharedSettings.NEBF_Direct || 
@@ -113,7 +113,7 @@ function OnGUI() {
 		}
 	}
 	if (isConnected) {
-		rrText.text = rrAtThisDt + "";
+		//rrText.text = rrAtThisDt + "";
 		//respiration bar
 		if (repirationRate == "N/A");
 		else{
@@ -127,17 +127,17 @@ function OnGUI() {
 			if (rr < targetRR){ 
 				//green means good
 				respBar.color = Color.green;
-				rrText.color = Color.green;
+				//rrText.color = Color.green;
 			}
 			else if(rr < transitRR){
 				//green to red means in range
 				respBar.color = Color.Lerp(Color.green, Color.red, (rr - targetRR) / (transitRR - targetRR));
-				rrText.color = Color.Lerp(Color.green, Color.red, (rr - targetRR) / (transitRR - targetRR));
+				//rrText.color = Color.Lerp(Color.green, Color.red, (rr - targetRR) / (transitRR - targetRR));
 			}
 			else{
 				//red out of range
 				respBar.color = Color.red;
-				rrText.color = Color.red;
+				//rrText.color = Color.red;
 			}
 		}
 	}

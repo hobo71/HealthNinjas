@@ -84,6 +84,9 @@ public class UnityPlayerNativeActivity extends NativeActivity {
 	}
 	
 	protected void onDestroy () {
+		if (_bt != null) {
+			disconnect();
+		}
 		mUnityPlayer.quit();
 		super.onDestroy();
 	}

@@ -327,7 +327,7 @@ function Update () {
 		}
 	}
 	else {
-		guiPoints.color = new Color (1,1,1);
+		guiPoints.color = new Color (1,1,0);
 	}
 	guiPoints.text = points.ToString();
 	
