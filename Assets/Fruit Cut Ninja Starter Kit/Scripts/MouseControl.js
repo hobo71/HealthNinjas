@@ -146,7 +146,11 @@ function BlowObject(hit : RaycastHit) {
 			}
 			isFlash = true;
 			flashGui.enabled = true;
-			audio.PlayOneShot(explodeSfx[Random.Range(0,explodeSfx.length)],1.0);
+			if (Application.loadedLevel == SharedSettings.NE_Control) {
+				audio.PlayOneShot(explodeSfx[1],1.0);
+			} else {
+				audio.PlayOneShot(explodeSfx[0],1.0);
+			}
 			targetScore -= SharedSettings.junk;
 			PointScript.Point = SharedSettings.junk;
 			PointScript.type = "junk";

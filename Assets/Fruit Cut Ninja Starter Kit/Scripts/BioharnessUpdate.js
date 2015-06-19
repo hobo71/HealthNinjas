@@ -105,7 +105,7 @@ function OnGUI() {
 			curTime = 0;
 			if (Application.loadedLevel == SharedSettings.NEBF_Direct || 
 				Application.loadedLevel == SharedSettings.BF_Only){
-				fenceUpdate.updateHeight(fenceUpdate.minWallPos);
+				fenceUpdate.resetFence();
 			}
 			if (Application.loadedLevel == SharedSettings.NEBF_Indirect){
 				fruitDispenser.junkUpdate(fruitDispenser.minJunkProb);

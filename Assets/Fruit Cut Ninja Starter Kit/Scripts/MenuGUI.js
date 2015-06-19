@@ -34,7 +34,7 @@ function OnGUI() {
 			ClickAsync(SharedSettings.loadedLevel);
 		}
 	} else {
-		loadingText.text = "Loading: " + hSliderValue + "";
+		loadingText.text = "Loading: " + Mathf.Round(hSliderValue*100) + "%";
 		//hSliderValue = GUI.HorizontalSlider (HelpClass.ScrRectCenter2(0.5,0.7,0.5,0.5), hSliderValue, 0.0, 1.0);
 	}
 	
