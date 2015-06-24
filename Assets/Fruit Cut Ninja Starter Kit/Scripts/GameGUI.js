@@ -11,14 +11,16 @@ function Pause() {
 		GameObject.Find("FruitDispenser").GetComponent(FruitDispenser).pause = true;
 		GameObject.Find("MainScripts").GetComponent(Timer).PauseTimer(true);
 		pauseinfo.SetActive(true);
-
+		
 		Time.timeScale = 0.0001;
+		SharedSettings.writeLog('Pause     ', 'Yes ');
 	} else {
 		GameObject.Find("FruitDispenser").GetComponent(FruitDispenser).pause = false;
 		GameObject.Find("MainScripts").GetComponent(Timer).PauseTimer(false);
 		pauseinfo.SetActive(false);
 
 		Time.timeScale = 1.0;
+		SharedSettings.writeLog('Unpause   ', 'Yes ');
 	}
 }
 
@@ -40,6 +42,8 @@ function PauseRB() {
 }
 
 function ExitGame() {
+	SharedSettings.writeLog("Exit      ", "Yes ");
+	SharedSettings.ioWriter.Close();
 	Application.Quit();
 }
 

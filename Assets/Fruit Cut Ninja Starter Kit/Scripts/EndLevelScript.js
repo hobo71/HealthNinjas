@@ -9,7 +9,6 @@ function Awake () {
 }
 
 function LateUpdate () {
-		
 	if (done && !completed) {
 		GameObject.Find("FruitDispenser").GetComponent(FruitDispenser).pause = true;
 		completed = true;

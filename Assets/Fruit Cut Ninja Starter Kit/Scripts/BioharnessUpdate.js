@@ -1,10 +1,12 @@
 #pragma strict
+import System.IO;
+
 var skin : GUISkin;
 static var isConnected = 0;
 static var strLog: String = "disconnected";
 static var buttonStr: String = "connect";
 private var repirationRate: String = "N/A";
-
+private var heartRate: String = "N/A";
 //resp property
 private var targetRR : float = SharedSettings.targetRR;
 private var transitRR : float = SharedSettings.transitRR;
@@ -50,16 +52,26 @@ function SetLog(str: String) {
 		strLog = str;
 		isConnected = 1;
 		buttonStr = "disconnect";
+		SharedSettings.writeLog("Connect   ", "Yes       ");
 	}	
 }
+
 
 function SetRepirationRate(str: String) {
 	repirationRate = str;
 	if (str != "N/A") {
 		rrInThisSecond = float.Parse(repirationRate);
+		SharedSettings.writeLog("Resp rate ", repirationRate+"      ");
 		if (Application.loadedLevel == SharedSettings.NEBF_Indirect) {
 			fruitDispenser.junkUpdate(rrInThisSecond);
 		}
+	}
+}
+
+function SetHeartRate(str: String) {
+	heartRate = str;
+	if (str != "N/A") {
+		SharedSettings.writeLog("Heart rate", heartRate+"        ");
 	}
 }
 
@@ -95,6 +107,7 @@ function OnGUI() {
 		else{ //disconnect
 			curActivity.Call("disconnect");
 			isConnected = 0;
+			SharedSettings.writeLog("Disconnect ", "Yes       ");
 			//reset GUI
 			buttonStr = "connect";
 			repirationRate = "N/A";

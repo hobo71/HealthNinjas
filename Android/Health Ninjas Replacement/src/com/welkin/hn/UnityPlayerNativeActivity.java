@@ -203,19 +203,20 @@ public class UnityPlayerNativeActivity extends NativeActivity {
     @SuppressLint("HandlerLeak")
 	final Handler Newhandler = new Handler() {
     	public void handleMessage(Message msg) {
+			if (msg.getData() == null) {
+				return;
+			}
     		switch (msg.what) {
 				case RESPIRATION_RATE:
 					if(msg.getData().getString("RespirationRate") != null)
 						UnityPlayer.UnitySendMessage("BioHarness", "SetRepirationRate", msg.getData().getString("RespirationRate"));
 					break;
-		   		default:
-		   			break;
-		   		/*
 		   		case HEART_RATE:
     				if(msg.getData().getString("HeartRate") != null)
     					UnityPlayer.UnitySendMessage("BioHarness", "SetHeartRate", msg.getData().getString("HeartRate"));
 		   			break;
-    			case SKIN_TEMPERATURE:
+    			/*
+		   		case SKIN_TEMPERATURE:
     				if(msg.getData().getString("SkinTemperature") != null)
     					UnityPlayer.UnitySendMessage("BioHarness", "SetSkinTemperature", msg.getData().getString("SkinTemperature"));
     				break;
@@ -228,6 +229,8 @@ public class UnityPlayerNativeActivity extends NativeActivity {
 		   				UnityPlayer.UnitySendMessage("BioHarness", "SetPeakAcceleration",msg.getData().getString("PeakAcceleration"));
 		   			break;	
 		   		*/
+		   		default:
+		   			break;
     		}
     	}
     };

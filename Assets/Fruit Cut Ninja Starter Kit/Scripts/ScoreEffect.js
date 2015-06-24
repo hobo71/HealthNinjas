@@ -18,14 +18,17 @@ function Start() {
 function OnGUI() {
 	var screenPos2 : Vector3 = Camera.main.camera.WorldToScreenPoint(PointPosition);
 	GetHitEffect += Time.deltaTime*30;
+	GUI.skin.label.fontSize = 60;
 	if (type == "fruit"){ //fruit
 		GUI.color = new Color (0,204.0f/255,0,1.0f - (GetHitEffect - 50) / 10);
 	}
 	else if (type == "junk"){ //junk
-		GUI.color = new Color (1.0f,0,0,1.0f - (GetHitEffect - 50) / 10);	
+		GUI.color = new Color (1.0f,0,0,1.0f - (GetHitEffect - 50) / 10);
+		GUI.skin.label.fontSize = 100;
 	}
 	else{ //superfruit
 		GUI.color = new Color (1.0f,215.0f/255,0,1.0f - (GetHitEffect - 50) / 10);
+		GUI.skin.label.fontSize = 100;
 	}
 	
 	GUI.skin = PointSkinShadow;

@@ -22,3 +22,14 @@ static var NEBF_Indirect : int = 2;
 static var NE_Control : int = 3;
 static var BF_Only : int = 4;
 static var loadedLevel : int = Menu;
+
+
+static var conditions : String[] = ["Menu", "NEBF_Direct", "NEBF_Indirect", "NE_Control", "BF_Only"];
+static var ioWriter : StreamWriter;
+
+static function writeLog(opt: String, val: String){
+	var t: System.DateTime = System.DateTime.Now;
+    var time : String = String.Format("{0:D2}:{1:D2}:{2:D2}:{3:D3}", t.Hour, t.Minute, t.Second, t.Millisecond);
+	this.ioWriter.WriteLine(opt + "     " + val + "     " + time);
+    this.ioWriter.Flush();
+}

@@ -1,11 +1,12 @@
 //timer script - can count or countdown (originaly used as countdown)
-
+import System.IO;
 #pragma strict
 var run : boolean = false;
 var end : boolean = true;
 var showTimeLeft : boolean = false;
 var timeAvailable : float = 120; 
 var timeEnd : boolean;
+var logDone : boolean = false;
 
 var startTime : float;
 var endTime : float;
@@ -68,6 +69,10 @@ function Update () {
    			timeEnd = true;
    			showTime = 0;
    			GetComponent(EndLevelScript).done = true;
+   			if (!logDone) {
+   				SharedSettings.writeLog("End       ", "Yes       ");
+   				logDone = true;
+   			}
    		}
   	}
 

@@ -18,6 +18,7 @@ function LoadMenu()
 function RestartLevel()
 {
 	yield WaitForSeconds(1.0);
+	SharedSettings.writeLog("Restart   ", "Yes       ");
 	Application.LoadLevel(SharedSettings.loadedLevel);
 }
 
@@ -30,6 +31,8 @@ function OnGUI() {
 	
 	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.7,0.3,0.075),"Exit")) {
 		PlayerPrefs.DeleteAll();
+		SharedSettings.writeLog("Exit      ", "Yes       ");
+		SharedSettings.ioWriter.Close();
 		Application.Quit();
 		
 	}

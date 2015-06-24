@@ -18,6 +18,7 @@ var fire : boolean = false;
 var fire_prev : boolean = false;
 var fire_down : boolean = false;
 var fire_up : boolean = false;
+var isHit : boolean = false;
 
 var trail : LineRenderer;
 
@@ -92,6 +93,8 @@ function Flash()
 //explode object
 function BlowObject(hit : RaycastHit) {
 	if (hit.collider.gameObject.tag != "destroyed") {	
+		isHit = true;
+		//Debug.Log("hit");
 		//Debug.Log(hit.transform.gameObject.layer);		
 		var splashZ = hit.point;
 		var go : GameObject;
@@ -105,17 +108,18 @@ function BlowObject(hit : RaycastHit) {
 		//score effect
 		var so = GameObject.Instantiate(scoreEffect, go.transform.position, Quaternion.identity);				
 		var PointScript = so.GetComponent(ScoreEffect);
-		//if not bomb inc points
+		//if fruit
 		if (hit.collider.gameObject.tag !="bomb") {
-			if (hit.collider.gameObject.tag=="bonus"){ // bonus
+			if (hit.collider.gameObject.tag=="bonus"){ // super fruit
 					targetScore += SharedSettings.bonus;
 					PointScript.Point = SharedSettings.bonus;
 					PointScript.type = "bonus";
 					combos = 0;
 					fruitDispenser.bonusOn = true;
 					currentType = "bonus";
+					SharedSettings.writeLog('Swipe     ', 'SuperFruit');
 			}
-			else{
+			else{ //normal fruit
 				var index = 0;
 				if (hit.collider.tag=="red" || hit.collider.tag=="red-bonus") index = 0;
 				if (hit.collider.tag=="yellow" || hit.collider.tag=="yellow-bonus") index = 1;
@@ -129,8 +133,14 @@ function BlowObject(hit : RaycastHit) {
 				PointScript.Point = SharedSettings.fruit;
 				PointScript.type = "fruit";
 				currentType = "fruit";
-				if (hit.collider.tag=="red-bonus" || hit.collider.tag=="yellow-bonus" || hit.collider.tag=="green-bonus");
-				else combos ++;
+				if (hit.collider.tag=="red-bonus" || hit.collider.tag=="yellow-bonus" || hit.collider.tag=="green-bonus") {
+					//bonus fruit	
+					SharedSettings.writeLog('Swipe     ', 'BonusFruit');
+				} else {
+					//normal fruit
+					SharedSettings.writeLog('Swipe     ', 'Fruit     ');
+					combos ++;
+				}
 				if (combos%6 == 0) audio.PlayOneShot(encourageSfx[Random.Range(0,encourageSfx.length)],1.0);
 			}
 			//decrease bomb frequency and size
@@ -148,8 +158,10 @@ function BlowObject(hit : RaycastHit) {
 			flashGui.enabled = true;
 			if (Application.loadedLevel == SharedSettings.NE_Control) {
 				audio.PlayOneShot(explodeSfx[1],1.0);
+				SharedSettings.writeLog('Swipe     ', 'Bomb      ');
 			} else {
 				audio.PlayOneShot(explodeSfx[0],1.0);
+				SharedSettings.writeLog('Swipe     ', 'JunkFood  ');
 			}
 			targetScore -= SharedSettings.junk;
 			PointScript.Point = SharedSettings.junk;
@@ -211,7 +223,7 @@ function Control() {
 			
 		AddTrailPosition();
 		started = true;
-		lineTimer = 0.25;
+		lineTimer = 0.25;	
 	}
 		
 	//continous hold
@@ -232,10 +244,10 @@ function Control() {
 		trial_alpha = 0.75;
 	}
 		
+	isHit = false;	
 	//if trial alpha is more than 0.5 - perform raycast of cut
 	if (trial_alpha>0.5) {
-		//Debug.Log("raycast");
-		for (var p = 0; p<8 ; p++) {
+		for (var p = 0; p < 8 ; p++) {
 			for (var i = 0; i < raycastCount; i++){
 				var ray : Ray = Camera.main.ScreenPointToRay(Vector3.Lerp(Camera.main.WorldToScreenPoint(trailPositions[p]),Camera.main.WorldToScreenPoint(trailPositions[p+1]), i * 1.0 / raycastCount * 1.0));
 				Debug.DrawLine(ray.origin,ray.direction * 10,Color.green,1.0);
@@ -244,9 +256,9 @@ function Control() {
 				 * 10 = 00001010
 				 *
 				 */
-				if (Physics.Raycast(ray, hit,100,(1<<10))){
+				if (Physics.Raycast(ray, hit, 100,(1<<10))){
 					BlowObject(hit);
-				}
+				} 
 			}
 		}	
 	} 
@@ -261,9 +273,13 @@ function Control() {
 		linePart++;
 		lineTimer = 0.01;
 	}
-		
-	if (fire_up && started) 
+	
+	if (fire_up && started){ 
 		started = false;
+		if (!isHit) {
+			SharedSettings.writeLog('Swipe     ', 'Nothing   ');
+		}
+	}
 		
 	//copy array to trail
 	SendTrailPosition();
@@ -331,7 +347,7 @@ function Update () {
 		}
 	}
 	else {
-		guiPoints.color = new Color (1,1,0);
+		guiPoints.color = new Color (1,1,1);
 	}
 	guiPoints.text = points.ToString();
 	

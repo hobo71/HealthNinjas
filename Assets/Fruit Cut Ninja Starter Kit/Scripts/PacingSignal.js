@@ -32,11 +32,11 @@ function Update () {
 	if (curTime < inhaleTime) {
 		li.range = minRange + kRangeInhale * curTime;
 		li.intensity = minIntensity + kIntensityInhale * curTime;
-		li.color = Color.Lerp(Color.white, Color.yellow, curTime / inhaleTime);
+		//li.color = Color.Lerp(Color.white, Color.yellow, curTime / inhaleTime);
 	} else {
 		li.range = maxRange - kRangeExhale * (curTime - inhaleTime);
 		li.intensity = maxIntensity - kIntensityExhale * (curTime - inhaleTime);
-		li.color = Color.Lerp(Color.yellow, Color.white, (curTime - inhaleTime) / exhaleTime);
+		//li.color = Color.Lerp(Color.yellow, Color.white, (curTime - inhaleTime) / exhaleTime);
 	} 
 	
 }
