@@ -8,43 +8,62 @@ var async : AsyncOperation;
 var loading : boolean = false;
 var userId : String = "";
 var idDone : boolean = false;
+//bioharness
+var bioharness : BioharnessUpdate;
+//
+var dbfTexture : Texture;
+var ibfTexture : Texture;
+var necTexture : Texture;
+var bfoTexture : Texture;
 
 
 function OnGUI() {
 	GUI.skin = skin;
 	
-	if (!idDone) { //input user id
+	if (!idDone) { //1. input user id
 		GUI.Label(HelpClass.ScrRectCenter2(0.4,0.3,0.2,0.15), "Please input user id");
 		userId = GUI.TextField(HelpClass.ScrRectCenter2(0.5,0.45,0.2,0.12), userId);
-		if (userId != "" && GUI.Button(HelpClass.ScrRectCenter2(0.5,0.6,0.2,0.075),"Ok")) {
+		if (userId != "" && GUI.Button(HelpClass.ScrRectCenter2(0.5,0.6,0.3,0.1),"Confirm")) {
 			idDone = true;
 		}
-	} 
-	else if (!loading){ //show options
-		if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.3,0.3,0.075),"NE+BF Direct - Fence")) {
+	} else if (!bioharness.isConnected && !bioharness.isConnecting) { //2. hit connect button
+		GUI.Label(HelpClass.ScrRectCenter2(0.35,0.3,0.2,0.15), "Please connect the sensor");
+		if (GUI.Button(HelpClass.ScrRectCenter2(0.510,0.510,0.3,0.1),"Connect") ){
+			bioharness.Connect();
+		}
+	} else if (!bioharness.isConnected) { //3. show connecting message...
+		GUI.Label(HelpClass.ScrRectCenter2(0.510,0.85,0.3,0.1), "Connecting...");
+	} else if (!loading){ //4. show options
+		GUI.Label(HelpClass.ScrRectCenter2(0.4,0.15,0.2,0.15), "Please choose a game");
+		
+		//"BF Direct - Fence"
+		if (GUI.Button(HelpClass.ScrRectCenter2(0.3,0.4,0.3,0.3), dbfTexture)) {
 			SharedSettings.loadedLevel = SharedSettings.NEBF_Direct;
-			//Application.LoadLevel(SharedSettings.loadedLevel);
 			ClickAsync(SharedSettings.loadedLevel);
 		}
+		//GUI.Label(HelpClass.ScrRectCenter2(0.3,0.55,0.2,0.15), "BF Game");
 		
-		if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.4,0.3,0.075),"NE+BF Indirect - Proportion")) {
+		//"BF Indirect - Ratio"
+		if (GUI.Button(HelpClass.ScrRectCenter2(0.7,0.4,0.3,0.3), ibfTexture)) {
 			SharedSettings.loadedLevel = SharedSettings.NEBF_Indirect;
-			//Application.LoadLevel(SharedSettings.loadedLevel);
 			ClickAsync(SharedSettings.loadedLevel);
 		}
+		//GUI.Label(HelpClass.ScrRectCenter2(0.7,0.55,0.2,0.15), "BF Game");
 		
-		if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.5,0.3,0.075),"NE Control - Bombs")) {
+		//"NE Control - Bombs"
+		if (GUI.Button(HelpClass.ScrRectCenter2(0.3,0.75,0.3,0.3), necTexture)) {
 			SharedSettings.loadedLevel = SharedSettings.NE_Control;
-			//Application.LoadLevel(SharedSettings.loadedLevel);
 			ClickAsync(SharedSettings.loadedLevel);
 		}
+		//GUI.Label(HelpClass.ScrRectCenter2(0.3,0.85,0.2,0.15), "NE Control");
 		
-		if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.6,0.3,0.075),"BF Only - Fence")) {
+		//"BF Only - Fence"
+		if (GUI.Button(HelpClass.ScrRectCenter2(0.7,0.75,0.3,0.3), bfoTexture)) {
 			SharedSettings.loadedLevel = SharedSettings.BF_Only;
-			//Application.LoadLevel(SharedSettings.loadedLevel);
 			ClickAsync(SharedSettings.loadedLevel);
 		}
-	} else { //loading screen
+		//GUI.Label(HelpClass.ScrRectCenter2(0.7,0.85,0.2,0.15), "BF Only");
+	} else { //5. show loading screen
 		loadingText.text = "Loading: " + Mathf.Round(hSliderValue*100) + "%";
 		//hSliderValue = GUI.HorizontalSlider (HelpClass.ScrRectCenter2(0.5,0.7,0.5,0.5), hSliderValue, 0.0, 1.0);
 	}
@@ -61,7 +80,7 @@ function ClickAsync(level : int) {
 function LoadLevelWithBar (level : int) {
 	async = Application.LoadLevelAsync(level);
 	InitLog(level);
-    while (!async.isDone) {
+    while (!async.isDone) {	
     	hSliderValue = async.progress;
     	yield;
     }

@@ -2,11 +2,12 @@
 import System.IO;
 
 var skin : GUISkin;
-static var isConnected = 0;
-static var strLog: String = "disconnected";
-static var buttonStr: String = "connect";
-private var repirationRate: String = "N/A";
-private var heartRate: String = "N/A";
+static var isConnected : boolean = false;
+static var isConnecting : boolean = false;
+static var strLog: String = "Disconnected";
+static var buttonStr: String = "Connect";
+static var repirationRate: String = "N/A";
+static var heartRate: String = "N/A";
 //resp property
 private var targetRR : float = SharedSettings.targetRR;
 private var transitRR : float = SharedSettings.transitRR;
@@ -46,12 +47,13 @@ function Awake() {
 function SetLog(str: String) {
 	if (str == "Fail"){ //connect fail
 		strLog = "try again";
-		isConnected = 0;
+		isConnecting = false;
+		isConnected = false;
 	}
 	else{ //success
 		strLog = str;
-		isConnected = 1;
-		buttonStr = "disconnect";
+		isConnected = true;
+		isConnecting = false;
 		SharedSettings.writeLog("Connect   ", "Yes       ");
 	}	
 }
@@ -75,13 +77,18 @@ function SetHeartRate(str: String) {
 	}
 }
 
+function Connect() {
+	curActivity.Call("connect");
+	isConnecting = true;
+}
+
 // Use this for initialization
 function Start () {
 }
 	
 // Update fence height once per dt
 function Update () {
-	if (isConnected) {
+	if (isConnected && Application.loadedLevel != SharedSettings.Menu) {
 		if (curTime > dt) {
 			curTime = 0;
 			rrAtThisDt = rr_1 - (rr_1 - rrInThisSecond) * alpha - (rr_2 - rr_1) / dt * beta;
@@ -99,33 +106,7 @@ function Update () {
 
 function OnGUI() {
 	GUI.skin = skin;
-	if (GUI.Button(HelpClass.ScrRectCenter2(0.510,0.965,0.14,0.065),buttonStr)){
-		if (!isConnected){ //connect
-			buttonStr = "connecting..";
-			curActivity.Call("connect");
-		}
-		else{ //disconnect
-			curActivity.Call("disconnect");
-			isConnected = 0;
-			SharedSettings.writeLog("Disconnect ", "Yes       ");
-			//reset GUI
-			buttonStr = "connect";
-			repirationRate = "N/A";
-			respBar.pixelInset.width = 0;
-			//rrText.color = Color.white;
-			//rrText.text = "disconnected"; 
-			//reset fence
-			curTime = 0;
-			if (Application.loadedLevel == SharedSettings.NEBF_Direct || 
-				Application.loadedLevel == SharedSettings.BF_Only){
-				fenceUpdate.resetFence();
-			}
-			if (Application.loadedLevel == SharedSettings.NEBF_Indirect){
-				fruitDispenser.junkUpdate(fruitDispenser.minJunkProb);
-			}
-		}
-	}
-	if (isConnected) {
+	if (isConnected && Application.loadedLevel != SharedSettings.Menu) {
 		//rrText.text = rrAtThisDt + "";
 		//respiration bar
 		if (repirationRate == "N/A");
