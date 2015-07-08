@@ -15,21 +15,25 @@ function LoadMenu()
 	Application.LoadLevel("menu");	
 }
 
+/*
 function RestartLevel()
 {
 	yield WaitForSeconds(1.0);
 	SharedSettings.writeLog("Restart   ", "Yes       ");
 	Application.LoadLevel(SharedSettings.loadedLevel);
 }
+*/
 
 function OnGUI() {
 	GUI.skin = skin;
 	
+	/*
 	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.6,0.3,0.075),"Restart")) {
 		RestartLevel();
 	}
+	*/
 	
-	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.7,0.3,0.075),"Exit")) {
+	if (GUI.Button(HelpClass.ScrRectCenter2(0.5,0.6,0.3,0.075),"Exit")) {
 		PlayerPrefs.DeleteAll();
 		SharedSettings.writeLog("Exit      ", "Yes       ");
 		SharedSettings.ioWriter.Close();

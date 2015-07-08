@@ -8,6 +8,7 @@ var async : AsyncOperation;
 var loading : boolean = false;
 var userId : String = "";
 var idDone : boolean = false;
+var confirmBH : boolean = false;
 //bioharness
 var bioharness : BioharnessUpdate;
 //
@@ -33,7 +34,12 @@ function OnGUI() {
 		}
 	} else if (!bioharness.isConnected) { //3. show connecting message...
 		GUI.Label(HelpClass.ScrRectCenter2(0.510,0.85,0.3,0.1), "Connecting...");
-	} else if (!loading){ //4. show options
+	} else if (!confirmBH){ //4. confirm connection
+		GUI.Label(HelpClass.ScrRectCenter2(0.45,0.3,0.2,0.15), "Connected to: " + bioharness.bhName);
+		if (GUI.Button(HelpClass.ScrRectCenter2(0.510,0.510,0.3,0.1),"Confirm") ){
+			confirmBH = true;
+		}
+	} else if (!loading){ //5. show game scene options
 		GUI.Label(HelpClass.ScrRectCenter2(0.4,0.15,0.2,0.15), "Please choose a game");
 		
 		//"BF Direct - Fence"
@@ -63,7 +69,7 @@ function OnGUI() {
 			ClickAsync(SharedSettings.loadedLevel);
 		}
 		//GUI.Label(HelpClass.ScrRectCenter2(0.7,0.85,0.2,0.15), "BF Only");
-	} else { //5. show loading screen
+	} else { //6. show loading screen
 		loadingText.text = "Loading: " + Mathf.Round(hSliderValue*100) + "%";
 		//hSliderValue = GUI.HorizontalSlider (HelpClass.ScrRectCenter2(0.5,0.7,0.5,0.5), hSliderValue, 0.0, 1.0);
 	}
@@ -89,7 +95,8 @@ function LoadLevelWithBar (level : int) {
 function InitLog(level : int){
 	var t: System.DateTime = System.DateTime.Now;
     var date : String = String.Format("{0:D4}-{1:D2}-{2:D2}-{3:D2}-{4:D2}-{5:D2}", t.Year, t.Month, t.Day, t.Hour, t.Minute, t.Second);
-	var fileName : String = userId + "_" + SharedSettings.conditions[level] + "_" + date + ".txt";
+	var fileName : String = userId + "_" + SharedSettings.conditions[level] + "_" 
+	                        + bioharness.bhName + "_" + date + ".txt";
 	SharedSettings.ioWriter = new StreamWriter(Application.persistentDataPath + "/" + fileName);
     SharedSettings.ioWriter.Flush();
 	//var FRead = new File.OpenText(filePath + fileName + ".txt");

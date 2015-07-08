@@ -4,7 +4,7 @@ import System.IO;
 var skin : GUISkin;
 static var isConnected : boolean = false;
 static var isConnecting : boolean = false;
-static var strLog: String = "Disconnected";
+static var bhName: String = "";
 static var buttonStr: String = "Connect";
 static var repirationRate: String = "N/A";
 static var heartRate: String = "N/A";
@@ -46,15 +46,31 @@ function Awake() {
 
 function SetLog(str: String) {
 	if (str == "Fail"){ //connect fail
-		strLog = "try again";
 		isConnecting = false;
 		isConnected = false;
 	}
 	else{ //success
-		strLog = str;
+		switch(str) {
+			case "BH BHT004383":
+				bhName = "1";
+				break;
+			case "BH BHT004404":
+				bhName = "2";
+				break;
+			case "BH BHT004495":
+				bhName = "3";
+				break;
+			case "BH BHT004767":
+				bhName = "4";
+				break;
+			default:
+				bhName = "Wrong device";
+				break;
+				
+		}
 		isConnected = true;
 		isConnecting = false;
-		SharedSettings.writeLog("Connect   ", "Yes       ");
+		//SharedSettings.writeLog("Connected   ", bhName);
 	}	
 }
 

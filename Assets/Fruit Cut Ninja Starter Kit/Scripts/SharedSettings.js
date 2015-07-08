@@ -3,7 +3,7 @@
 #pragma strict
 
 //time of game
-static var ConfigTime : int = 300;
+static var ConfigTime : int = 360;
 
 //respiration value
 static var maxRR : float = 24.0f;
@@ -24,12 +24,12 @@ static var BF_Only : int = 4;
 static var loadedLevel : int = Menu;
 
 
-static var conditions : String[] = ["Menu", "NEBF_Direct", "NEBF_Indirect", "NE_Control", "BF_Only"];
+static var conditions : String[] = ["Menu", "NEGBF_Direct", "NEGBF_Indirect", "NE_Control", "BF_Only"];
 static var ioWriter : StreamWriter;
 
 static function writeLog(opt: String, val: String){
 	var t: System.DateTime = System.DateTime.Now;
     var time : String = String.Format("{0:D2}:{1:D2}:{2:D2}:{3:D3}", t.Hour, t.Minute, t.Second, t.Millisecond);
-	this.ioWriter.WriteLine(opt + "     " + val + "     " + time);
+	this.ioWriter.WriteLine(opt + "    " + val + "    " + time);
     this.ioWriter.Flush();
 }
