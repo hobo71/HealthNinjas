@@ -17,6 +17,7 @@ private var curActivity: AndroidJavaObject;
 var fruitDispenser: FruitDispenser;
 var fenceUpdate: FenceUpdate;
 var finishGui: FinishGUI;
+var helper: GUITexture;
 private var rrText: GUIText;
 private var respBar: GUITexture;
 
@@ -77,7 +78,7 @@ function SetLog(str: String) {
 
 function SetRepirationRate(str: String) {
 	repirationRate = str;
-	if (str != "N/A") {
+	if (str != "N/A" && Application.loadedLevel != SharedSettings.Menu) {
 		rrInThisSecond = float.Parse(repirationRate);
 		SharedSettings.writeLog("Resp rate ", repirationRate+"      ");
 		if (Application.loadedLevel == SharedSettings.NEBF_Indirect) {
@@ -88,7 +89,7 @@ function SetRepirationRate(str: String) {
 
 function SetHeartRate(str: String) {
 	heartRate = str;
-	if (str != "N/A") {
+	if (str != "N/A" && Application.loadedLevel != SharedSettings.Menu) {
 		SharedSettings.writeLog("Heart rate", heartRate+"        ");
 	}
 }
@@ -137,17 +138,18 @@ function OnGUI() {
 			if (rr < targetRR){ 
 				//green means good
 				respBar.color = Color.green;
-				//rrText.color = Color.green;
 			}
 			else if(rr < transitRR){
 				//green to red means in range
 				respBar.color = Color.Lerp(Color.green, Color.red, (rr - targetRR) / (transitRR - targetRR));
-				//rrText.color = Color.Lerp(Color.green, Color.red, (rr - targetRR) / (transitRR - targetRR));
+				//disable helper
+				helper.color = Color.clear;
 			}
 			else{
 				//red out of range
 				respBar.color = Color.red;
-				//rrText.color = Color.red;
+				//set helper
+				helper.color = Color(0.5, 0.5, 0.5, 1);
 			}
 		}
 	}

@@ -85,7 +85,7 @@ function FireUp () {
 			bonusOn = false;
 		}
 		else{
-			if (timer.curTime > 10 && timer.curTime % sfInterval < 1.0f && disInterval > 0.8f || mouseControl.combos/10 > 0){
+			if (timer.curTime > 10 && timer.curTime % sfInterval < 1.0f && disInterval > 0.8f || mouseControl.combos/15 > 0){
 				Spawn(3); //super fruit
 				mouseControl.combos = 0;
 			}
@@ -110,20 +110,20 @@ function Spawn(type : int) {
 	var direction : Vector3;
 	
 	//initialize specific settings
-	if (type==1) { //fruit : 1
+	if (type == 1) { //fruit : 1
 		ins = GameObject.Instantiate(fruits[Random.Range(0,fruits.length)],transform.position + Vector3(x,0,z),Random.rotation);
 	}
-	else if (type==2){ //junk: 2
+	else if (type == 2){ //junk: 2
 		z = Random.Range(0,0.3);
 		ins = GameObject.Instantiate(junks[Random.Range(0,junks.length)],transform.position + Vector3(x,0,z),Random.rotation);
 		//ins.transform.localScale = bombSize;
 	}
-	else if (type==4){ //bonus fruit: 4 - does not count combos on them
+	else if (type == 4){ //bonus fruit: 4 - does not count combos on them
 		var i = Random.Range(0,fruits.length);
 		ins = GameObject.Instantiate(fruits[i],transform.position + Vector3(x,0,z),Random.rotation);
 		ins.tag = fruitsCombo[i];
 	}
-	if (type==3){ //super fruit
+	if (type == 3){ //super fruit
 		var y = Random.Range(0,3);
 		var xs = [-8,8];
 		x = xs[Random.Range(0,2)];
