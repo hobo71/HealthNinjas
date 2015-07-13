@@ -10,7 +10,9 @@ function Awake () {
 
 function LateUpdate () {
 	if (done && !completed) {
-		GameObject.Find("FruitDispenser").GetComponent(FruitDispenser).pause = true;
+		if (Application.loadedLevel != SharedSettings.BF_Only) {
+			GameObject.Find("FruitDispenser").GetComponent(FruitDispenser).pause = true;
+		}
 		completed = true;
 		GameObject.Find("MainScripts").GetComponent(Timer).EndTimer();
 		//GameObject.Find("GUI").SetActiveRecursively(false);

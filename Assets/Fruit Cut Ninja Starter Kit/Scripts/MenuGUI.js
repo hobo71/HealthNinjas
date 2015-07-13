@@ -98,7 +98,7 @@ function InitLog(level : int){
 	var fileName : String = userId + "_" + SharedSettings.conditions[level] + "_" 
 	                        + bioharness.bhName + "_" + date + ".txt";
 	SharedSettings.ioWriter = new StreamWriter(Application.persistentDataPath + "/" + fileName);
-    SharedSettings.ioWriter.Flush();
+    SharedSettings.writeLog("Start game", SharedSettings.conditions[level]);
 	//var FRead = new File.OpenText(filePath + fileName + ".txt");
 }
 
