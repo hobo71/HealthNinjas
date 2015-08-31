@@ -78,7 +78,7 @@ public class NewConnectedListener extends ConnectListenerImpl
 					b1.putString("HeartRate", String.valueOf(HRate));
 					text1.setData(b1);
 					_aNewHandler.sendMessage(text1);
-					System.out.println("Heart Rate is "+ HRate);
+					//System.out.println("Heart Rate is "+ HRate);
 
 					//***************Displaying the Respiration Rate********************************
 					double RespRate = GPInfo.GetRespirationRate(DataArray);

@@ -3,7 +3,8 @@
 #pragma strict
 
 //time of game
-static var ConfigTime : int = 360;
+static var ConfigTime : int = 360; //seconds
+static var CalibrationTime : int = 120; //seconds
 
 //respiration value
 static var maxRR : float = 24.0f;
@@ -21,11 +22,24 @@ static var NEBF_Direct : int = 1;
 static var NEBF_Indirect : int = 2;
 static var NE_Control : int = 3;
 static var BF_Only : int = 4;
+static var QuizMenu : int = 5;
+static var QuizMain : int = 6;
+static var QuizResult : int = 7;
 static var loadedLevel : int = Menu;
 
 
 static var conditions : String[] = ["Menu", "NEGBF_Direct", "NEGBF_Indirect", "NE_Control", "BF_Only"];
 static var ioWriter : StreamWriter;
+
+/* nutrition quiz */
+static var healthyFood : String[] = 
+	['Pear', 'Carrot', 'Chicken', 'Cheese', 'Bread', 'Water', 
+	 'Milk', 'Soup', 'Salad', 'Raisins', 'Strawberries', 'Juice'];
+static var unhealthyFood : String[] = 
+	['Apple pie', 'French fries', 'Sausage', 'Ice cream', 'Donut', 'Soda',  
+	 'Cupcake', 'Hot dog', 'Hamburger', 'Chocolate bar', 'Cookie', 'Cake'];	
+static var score : int = 0;
+
 
 static function writeLog(opt: String, val: String){
 	var t: System.DateTime = System.DateTime.Now;

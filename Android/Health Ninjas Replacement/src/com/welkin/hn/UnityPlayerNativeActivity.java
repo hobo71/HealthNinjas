@@ -56,8 +56,9 @@ public class UnityPlayerNativeActivity extends NativeActivity {
 		if (mUnityPlayer.getSettings ().getBoolean ("hide_status_bar", true))
 			getWindow ().setFlags (WindowManager.LayoutParams.FLAG_FULLSCREEN,
 			                       WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		int glesMode = mUnityPlayer.getSettings().getInt("gles_mode", 1);
+		
 		boolean trueColor8888 = false;
 		mUnityPlayer.init(glesMode, trueColor8888);
 

@@ -1,23 +1,23 @@
 ﻿#pragma strict
 
-var breathTime : float = 5.0f;
-var inhaleTime : float = 2.0f;
-var exhaleTime : float = breathTime - inhaleTime;
+var breathTime : float;
+var inhaleTime : float;
+var exhaleTime : float;
 
 private var minRange : float = 1.0f;
 private var maxRange : float = 12.6f;
-private var kRangeInhale : float = (maxRange - minRange) / inhaleTime;
-private var kRangeExhale : float = (maxRange - minRange) / exhaleTime;
+private var kRangeInhale : float;
+private var kRangeExhale : float;
 
 private var minIntensity : float = 1.0f;
 private var maxIntensity : float = 5.4f;
-private var kIntensityInhale : float = (maxIntensity - minIntensity) / inhaleTime;
-private var kIntensityExhale : float = (maxIntensity - minIntensity) / exhaleTime;
+private var kIntensityInhale : float;
+private var kIntensityExhale : float;
 
 private var minAlpha : float = 50.0f;
 private var maxAlpha : float = 255.0f;
-private var kAlphaInhale : float = (maxAlpha - minAlpha) / inhaleTime;
-private var kAlphaExhale : float = (maxAlpha - minAlpha) / exhaleTime;
+private var kAlphaInhale : float;
+private var kAlphaExhale : float;
 
 var timer: Timer;
 var li : Light;
@@ -25,6 +25,13 @@ private var color : Color;
 
 function Start () {
 	color = li.color;
+	breathTime = 60 / SharedSettings.targetRR;
+	inhaleTime = breathTime * 0.4;
+	exhaleTime = breathTime - inhaleTime;
+	kRangeInhale = (maxRange - minRange) / inhaleTime;
+	kRangeExhale = (maxRange - minRange) / exhaleTime;
+	kIntensityInhale = (maxIntensity - minIntensity) / inhaleTime;
+	kIntensityExhale = (maxIntensity - minIntensity) / exhaleTime;
 }
 
 function Update () {

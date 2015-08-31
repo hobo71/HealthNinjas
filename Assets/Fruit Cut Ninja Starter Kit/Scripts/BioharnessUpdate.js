@@ -8,10 +8,11 @@ static var bhName: String = "";
 static var buttonStr: String = "Connect";
 static var repirationRate: String = "N/A";
 static var heartRate: String = "N/A";
-//resp property
-private var targetRR : float = SharedSettings.targetRR;
-private var transitRR : float = SharedSettings.transitRR;
-private var maxRR : float = SharedSettings.maxRR;
+//calibration
+static var isCalibrated : boolean = false;
+static var isCalibrating : boolean = false;
+static var calibrationSeconds : int = 0;
+private var brArray : Array = new Array();
 
 private var curActivity: AndroidJavaObject;
 var fruitDispenser: FruitDispenser;
@@ -20,6 +21,7 @@ var finishGui: FinishGUI;
 var helper: GUITexture;
 private var rrText: GUIText;
 private var respBar: GUITexture;
+private var targetLine: GUITexture;
 
 //PD control var
 private var abd_option_1: float[] = [0.0065f, 0.09f, 0.1f];
@@ -39,6 +41,7 @@ function Awake() {
 	curActivity = jc.GetStatic.<AndroidJavaObject>("currentActivity");
 	rrText = GameObject.Find("GUI/RespBar/text").GetComponent(GUIText);
 	respBar = GameObject.Find("GUI/RespBar/bar").GetComponent(GUITexture);
+	targetLine = GameObject.Find("GUI/RespBar/guideline").GetComponent(GUITexture);
 	//initialize parameters
 	alpha = abd[0];
 	beta = abd[1];
@@ -75,17 +78,33 @@ function SetLog(str: String) {
 	}	
 }
 
-
 function SetRepirationRate(str: String) {
 	repirationRate = str;
-	if (str != "N/A" && Application.loadedLevel != SharedSettings.Menu) {
+	if (str != "N/A") {
 		rrInThisSecond = float.Parse(repirationRate);
-		SharedSettings.writeLog("Resp rate ", repirationRate+"      ");
-		if (Application.loadedLevel == SharedSettings.NEBF_Indirect) {
-			fruitDispenser.junkUpdate(rrInThisSecond);
+		if (Application.loadedLevel != SharedSettings.Menu) {
+			SharedSettings.writeLog("Resp rate ", repirationRate+"      ");
+			if (Application.loadedLevel == SharedSettings.NEBF_Indirect) {
+				fruitDispenser.junkUpdate(rrInThisSecond);
+			}
+		} else if (isCalibrating) {
+			//SharedSettings.writeLog("Resp rate ", repirationRate+"      ");
+			calibrationSeconds++;
+			if (calibrationSeconds > 20) { //discard first 20 seconds data
+				brArray.push(rrInThisSecond);
+			}
 		}
 	}
 }
+
+
+function getTargetRate() {
+	brArray.sort();
+	var index : int = brArray.length * 0.25;
+	Debug.Log("#" + index +": "+brArray[index]);
+	return brArray[index];
+}
+
 
 function SetHeartRate(str: String) {
 	heartRate = str;
@@ -103,7 +122,7 @@ function Connect() {
 function Start () {
 }
 	
-// Update fence height once per dt
+// Update fence height once per dt for game biofeedback
 function Update () {
 	if (isConnected && Application.loadedLevel != SharedSettings.Menu) {
 		if (curTime > dt) {
@@ -118,30 +137,32 @@ function Update () {
 		} else {
 			curTime += Time.deltaTime;
 		}
-	}
+	} 
 }
+
 
 function OnGUI() {
 	GUI.skin = skin;
 	if (isConnected && Application.loadedLevel != SharedSettings.Menu) {
 		//rrText.text = rrAtThisDt + "";
-		//respiration bar
+		targetLine.pixelInset.x = (SharedSettings.targetRR / SharedSettings.maxRR) * 320;
+		//update respiration bar
 		if (repirationRate == "N/A");
 		else{
 			var rr = Mathf.Round(rrAtThisDt * 100) / 100;
-			if (rr > maxRR){ 
-				rr = maxRR;
+			if (rr > SharedSettings.maxRR){ 
+				rr = SharedSettings.maxRR;
 			}
-			respBar.pixelInset.width = (320 / maxRR)* rr;
+			respBar.pixelInset.width = (320 / SharedSettings.maxRR)* rr;
 
 			//set color of texture
-			if (rr < targetRR){ 
+			if (rr < SharedSettings.targetRR){ 
 				//green means good
 				respBar.color = Color.green;
 			}
-			else if(rr < transitRR){
+			else if(rr < SharedSettings.transitRR){
 				//green to red means in range
-				respBar.color = Color.Lerp(Color.green, Color.red, (rr - targetRR) / (transitRR - targetRR));
+				respBar.color = Color.Lerp(Color.green, Color.red, (rr - SharedSettings.targetRR) / (SharedSettings.transitRR - SharedSettings.targetRR));
 				//disable helper
 				helper.color = Color.clear;
 			}
